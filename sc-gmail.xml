@@ -17,9 +17,7 @@
   </ModulePrefs>
   <Content type="html" view="card">
     <![CDATA[
-      <!-- Start with Single Sign-On -->
       <style type="text/css">
-
         body {
           background: transparent
         }
@@ -36,6 +34,17 @@
       </style>
       <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
       <script type='text/javascript' src='http://sc.warteschlange.de/sc-gmail.js'></script>
+      <script type='text/javascript'>
+        jQuery('<ul/>').appendTo(document.body).scGMail( google.contentmatch.getContentMatches(), { callback: function(listSize, listHeight){
+          if( listHeight > 0 ) {
+            gadgets.window.adjustHeight(listHeight + 12);
+          }
+          else {
+            $(gadgets.window).hide();
+          }
+        }
+       });
+      </script>
     ]]>
   </Content>
 </Module>

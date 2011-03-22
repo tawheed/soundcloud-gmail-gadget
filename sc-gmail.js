@@ -85,22 +85,23 @@
     return this.each(function() {
       var $this = $(this),
           curHeight,
-          listHeight = 12;
-      
+          listSize = 0,
+          listHeight = 0;
+
       // Iterate through the array and display output for each match.
       $.each(matches, function(index, match) {
         if( matchesSoundcloudUrl(match['path']) ) {
-          curHeight = (match['path'].search(/\/sets\//) != -1) ? options['setsHeight'] : options['singleHeight'];
+          listSize += 1;
+          curHeight = (match['path'].search(/\/sets\//) != -1) ? options.setsHeight : options.singleHeight;
           listHeight += curHeight + 10;
           $('<li />').append(playerCode(match['url'], curHeight)).appendTo($this);
         }
       });
-      
-      gadgets.window.adjustHeight(listHeight);
+
+      if($.isFunction(options.callback)) {
+        options.callback(listSize, listHeight);
+      }
     });
   };
-  
+
 })( jQuery );
-
-
-jQuery('<ul/>').appendTo(document.body).scGMail( google.contentmatch.getContentMatches() );

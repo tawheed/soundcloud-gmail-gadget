@@ -34,7 +34,7 @@
 <Extension id="linkExtractor" type="contextExtractor">
   <Name>Link Extractor</Name>
   <Url>google.com:HttpLinkExtractor</Url>
-  <Param name="url" value="(((https?\:\/\/)?)(www\.)?soundcloud.com\/[^&gt;\/]+\/((sets\/[^&gt;\/]+(\/[^&gt;\/]+)?)|([^d&gt;\/][^&gt;\/]*|d(|[^r&gt;\/][^&gt;\/]*|r(|[^o&gt;\/][^&gt;\/]*|o(|[^p&gt;\/][^&gt;\/]*|p(|[^b&gt;\/][^&gt;\/]*|b(|[^o&gt;\/][^&gt;\/]*|o(|[^x&gt;\/][^&gt;\/]*|x[^&gt;\/]+)))))))(\/[^&gt;\/]+)?))$"/>
+  <Param name="url" value="soundcloud.com\/([^\/]+)\/(sets\/)?([^\/]+)"/>
   <Triggers ref="SoundCloudGadget"/>
   <Scope ref="emailSubject"/>
   <Scope ref="emailBody"/>
@@ -45,7 +45,7 @@
 
 <Extension id="SoundCloudGadget" type="gadget">
   <Name>SoundCloud Gmail contextual gadget</Name>
-  <Url>http://eric.wahlforss.com/sc-gmail/sc-gmail.xml</Url>
+  <Url>http://sc.warteschlange.de/sc-gmail.xml</Url>
   <Container name="mail"/>
   <!-- Uncomment this to enable Caja. -->
   <!-- <Param name="caja" value="enabled"/> -->
