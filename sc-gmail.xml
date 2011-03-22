@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+  <ModulePrefs title="SoundCloud"
+    description="Tracks from this email"
+    height="20"
+    author="Eric Wahlforss"
+    author_email="eric@soundcloud.com"
+    author_location="Berlin, Germany">
+
+    <!-- Declare feature dependencies. -->
+
+    <!-- This one is not specific to Gmail contextual gadgets. -->
+    <Require feature="dynamic-height"/>
+
+    <!-- The next feature, Caja, is optional, and is supported for
+     use only within test domains. Uncomment the tag only for
+     non-production gadgets. -->
+    <!-- <Require feature="caja"/> -->
+
+    <!-- The next feature, google.contentmatch, is required for all
+     Gmail contextual gadgets.
+     <Param> - specify one or more comma-separated extractor IDs in
+     a param named "extractors". This line is overridden by the extractor ID
+     in the manifest, but is still expected to be present. -->
+    <Require feature="google.contentmatch">
+      <Param name="extractors">
+        google.com:HttpLinkExtractor
+      </Param>
+    </Require>
+
+  </ModulePrefs>
+
+  <!-- Define the content type and display location. The settings
+   "html" and "card" are required for all Gmail contextual gadgets. -->
+  <Content type="html" view="card">
+    <![CDATA[
+      <!-- Start with Single Sign-On -->
+      <style type="text/css">
+        
+        body {
+          background: transparent
+        }
+        
+        li {
+          list-style-type: none;
+          padding: 0 0 10px 0;
+          margin: 0;
+        }
+        ul {
+          padding: 0;
+          margin: 0;
+        }
+      </style>
+      <!-- <script type="text/javascript" src="http://example.com/gadgets/sso.js"></script> -->
+      <script type="text/javascript">
+
+        <!-- Fetch the array of content matches. -->
+        matches = google.contentmatch.getContentMatches();
+        var matchList = document.createElement('UL');
+        var listItem;
+        var extractedText;
+        var listHeight = 0;
+        var singleHeight = 81;
+        var setsHeight = 200;
+        var curHeight;
+        
+        var reservedWords = new Array("accounts","activate","admin","announcements","api","apps","artworks","assets",
+        "comments","community-guidelines","connect","customize","creativecommons"
+        "dashboard","dropbox",
+        "emails","errors","events",
+        "faqs","favorites","feedbacks","feeds","for","forums",
+        "gifts","groups","guestlist","genres",
+        "hot",
+        "invite","imprint",
+        "latest","login","logout",
+        "me","messages","music",
+        "newsletters",
+        "oauth","oauth2","orders",
+        "oembed",
+        "pages","partners","people","player","playlists","posts","press","pro","press_release",
+        "search","session","sets","settings","signup","stats","stream","subscription",
+        "terms-of-use","tour","tracks","turn_off_notifications","tags",
+        "upload","users",
+        "videos",
+        "waveform","widgets",
+        "widget.xml","widget","widget.json",
+        "you",
+        "contacts","fans","faq","logged_exceptions","robots","soundcloud","topics");        
+
+        <!-- Iterate through the array and display output for each match. -->
+        for (var match in matches) {
+                
+                  
+          if (!matches[match]['url'].match(new RegExp("(soundcloud.com\/.+\/dropbox)")) && matches[match]['url'].match(new RegExp("(((https?\:\/\/)?)(www\.)?soundcloud.com\/[^<\/]+\/((sets\/[^<\/]+)|[^<\/]+)($|\/[^<\/]+))$"))) { // match only soundcloud.com links
+            
+            listItem = document.createElement('LI');
+            
+            if(matches[match]['url'].search(/\/sets\//) != -1) {
+              listHeight += (setsHeight+10);
+              curHeight = setsHeight;
+            } else {
+              listHeight += (singleHeight+10);
+              curHeight = singleHeight;
+            }
+
+            listItem.innerHTML = '<object height="' + curHeight + '" width="100%"> <param name="movie" value="http://player.soundcloud.com/player.swf?url=' + encodeURIComponent(matches[match]['url']) + '"></param> <param name="allowscriptaccess" value="always"></param> <embed allowscriptaccess="always" height="' + curHeight + '" src="http://player.soundcloud.com/player.swf?url=' + encodeURIComponent(matches[match]['url']) + '" type="application/x-shockwave-flash" width="100%"></embed> </object>';
+            
+            //listItem.innerHTML = matches[match]['url'];
+            
+            matchList.appendChild(listItem);
+          }
+        }
+        document.body.appendChild(matchList);
+        gadgets.window.adjustHeight(listHeight+12);
+      </script>
+    ]]>
+  </Content>
+</Module>
