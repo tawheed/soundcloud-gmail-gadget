@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
-  <ModulePrefs title="SoundCloud"
+  <ModulePrefs
+    title="SoundCloud"
+    title_url="http://soundcloud.com/"
     description="Tracks from this email"
-    height="20"
+    height="0"
     author="Eric Wahlforss"
     author_email="eric@soundcloud.com"
     author_location="Berlin, Germany">
@@ -37,12 +39,9 @@
       <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
       <script type='text/javascript' src='http://sc.warteschlange.de/sc-gmail.js'></script>
       <script type='text/javascript'>
-        jQuery('<ul/>').appendTo(document.body).scGMail( google.contentmatch.getContentMatches(), { callback: function(listSize, listHeight){
+        jQuery(document.body).scGMail( google.contentmatch.getContentMatches(), { callback: function(listSize, listHeight, list){
           if( listHeight > 0 ) {
-            gadgets.window.adjustHeight(listHeight + 12);
-          }
-          else {
-            $(gadgets.window).hide();
+            gadgets.window.adjustHeight(listHeight);
           }
         }
        });

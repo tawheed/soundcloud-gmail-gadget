@@ -34,7 +34,7 @@
 <Extension id="linkExtractor" type="contextExtractor">
   <Name>Link Extractor</Name>
   <Url>google.com:HttpLinkExtractor</Url>
-  <Param name="url" value="https?:\/\/(www\.)?soundcloud.com\/([^\/]+)\/(sets\/)?([^\/]+)(\/)?(\?.+)?(#.+)?$"/>
+  <Param name="url" value="https?\:\/\/(www\.)?soundcloud.com\/([^\/]+)\/(?!dropbox)(sets\/)?([^\/]+)(\/)?(\?.+)?(#.+)?$"/>
   <Triggers ref="SoundCloudGadget"/>
   <Scope ref="emailBody"/>
   <Container name="mail"/>

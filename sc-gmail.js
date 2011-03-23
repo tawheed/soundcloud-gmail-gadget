@@ -41,6 +41,9 @@
     'tracks'
   ],
   methods = {
+    /**
+     * Split path and remove trailing vars and anchors
+     */
     splitPath : function(urlPath) {
       urlPath = urlPath.split('?')[0]; //strip vars
       urlPath = urlPath.split('#')[0]; //strip anchors
@@ -49,6 +52,9 @@
       });
     },
 
+    /**
+     * Filter blacklist or invalid paths
+     */
     filteredPath : function(urlPath) {
       var slices = $.map( methods.splitPath(urlPath), function(element, index) {
         return element.toLowerCase();
@@ -65,6 +71,9 @@
       return false;
     },
 
+    /**
+     * Returns SoundCloud player
+     */
     playerCode : function(path, height) {
       url = encodeURIComponent('http://soundcloud.com' + path);
       return '<object height="' + height + '" width="100%"> \
@@ -74,10 +83,14 @@
        </object>';
     },
 
+    /**
+     * Main function, iterate over given paths and append a player for valid ones
+     */
     init : function( matches, options ) {
       options = $.extend(true, {
-        singleHeight: 81,
-        setsHeight: 200
+        singleHeight: 90,
+        setsHeight: 200,
+        linePadding: 15
       }, options);
 
       /**
@@ -85,26 +98,26 @@
        */
       return this.each(function() {
         var $this = $(this),
-            curHeight,
-            list = {},
             listSize = 0,
-            listHeight = 0;
+            listHeight = 0,
+            list = {},
+            curHeight;
 
+        //add ul element if not present
         $this = $this.is('ul') ? $this : $('<ul />').appendTo($this);
 
-        // Iterate through the array and display output for each match.
         $.each(matches, function(index, match) {
-          console.log(match);
           path = methods.filteredPath(match['path']);
           if( path && !list[path] ) {
             curHeight = (path.search(/\/sets\//i) != -1) ? options.setsHeight : options.singleHeight;
             $('<li />').append(methods.playerCode('/' + path, curHeight)).appendTo($this);
             listSize += 1;
-            listHeight += curHeight + 10;
+            listHeight += curHeight + options.linePadding;
             list[path] = true;
           }
         });
 
+        //trigger callback
         if($.isFunction(options.callback)) {
           options.callback(listSize, listHeight, list);
         }
@@ -113,6 +126,10 @@
 
   };
 
+  /**
+   * Plugin scope, check if function exits, fallback to main function
+   * this is mainly done to be able to test internal functions
+   */
   $.fn.scGMail = function( method ) {
     if ( methods[method] ) {
       return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
@@ -120,6 +137,7 @@
       return methods.init.apply( this, arguments );
     } else {
       $.error( 'Method ' +  method + ' does not exist on jQuery.scGMail' );
+      return false;
     }
   };
 
