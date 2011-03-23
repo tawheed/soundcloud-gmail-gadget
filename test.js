@@ -27,7 +27,7 @@ $(document).ready(function(){
         'http://soundcloud.com/username/tracks',
         'http://soundcloud.com/accounts/trackname',
         'http://soundcloud.com/dashboard/trackname',
-        'http://soundcloud.com/emails/trackname', 
+        'http://soundcloud.com/emails/trackname',
         'http://soundcloud.com/fans/trackname',
         'http://soundcloud.com/gifts/trackname',
         'http://soundcloud.com/hot/trackname',
@@ -49,79 +49,76 @@ $(document).ready(function(){
         'http://soundcloud.com/premium'
         ];
 
-  module("Application Manifest URL matching");
+  module("Application Manifest");
 
   var applicationManifestPattern = /https?:\/\/(www\.)?soundcloud.com\/([^\/]+)\/(sets\/)?([^\/]+)(\/)?(\?.+)?(#.+)?$/i;
 
-  test("should match valid URLS", function() {
+  test("match URLS", 41, function() {
     $.each(validUrls, function(index, url) {
-      ok( applicationManifestPattern.test(url), "Valid URL: " + url );
+      ok( applicationManifestPattern.test(url), "We expect url to be valid: " + url );
     });
-  });
 
-  test("should match blacklisted URLS", function() {
     $.each(blacklistedUrls, function(index, url) {
-      ok( applicationManifestPattern.test(url), "Blacklisted URL: " + url );
+      ok( applicationManifestPattern.test(url), "We expect url to be valid: " + url );
     });
-  });
 
-  test("should not match invalid URLS", function() {
     $.each(invalidUrls, function(index, url) {
-      ok( !applicationManifestPattern.test(url), "Invalid URL: " + url );
+      ok( !applicationManifestPattern.test(url), "We expect url to be invalid: " + url );
     });
   });
 
-  module("jQuery.scGMail#splitPath");
-  test("should filter path", function() {
+  module('jQuery.scGMail');
+  test("splitPath: split path", 7, function() {
     validPaths = {
       '/forss/sets/soulhack/?test=asd' : ["forss", "sets", "soulhack"],
       'forss/sets' : ["forss", "sets"],
       'forss/sets/' : ["forss", "sets"],
+      'forss/' : ["forss"],
       'forss/sets#asd' : ["forss", "sets"],
+      'FORSS/SETS#ASD' : ["FORSS", "SETS"],
       'forss/sets/?asd=sdf#asd' : ["forss", "sets"]
     };
 
     $.each(validPaths, function(path, should) {
-      is = jQuery('<ul/>').scGMail('splitPath', path);
-      same( should, is, "We expect " + path + " to be " + should );
+      var is = jQuery('<ul/>').scGMail('splitPath', path);
+      deepEqual( should, is, "We expect " + path + " to be " + should );
     });
   });
 
-  module("jQuery.scGMail#splitPath");
-  test("should filter path", function() {
-    validPaths = {
-      '/forss/sets/soulhack/?test=asd' : ["forss", "sets", "soulhack"],
-      'forss/sets' : ["forss", "sets"],
-      'forss/sets/' : ["forss", "sets"],
-      'forss/sets#asd' : ["forss", "sets"],
-      'forss/sets/?asd=sdf#asd' : ["forss", "sets"]
-    };
-
-    $.each(validPaths, function(path, should) {
-      is = jQuery('<ul/>').scGMail('splitPath', path);
-      same( should, is, "We expect " + path + " to be " + should );
-    });
-  });
-
-  module("jQuery.scGMail#blacklistedSoundcloudPath");
-  test("should not filter valid URLS", function() {
+  test("filteredPath: filter path", 33, function() {
     $.each(validUrls, function(index, url) {
-      blacklisted = jQuery('<ul/>').scGMail('blacklistedSoundcloudPath', extractPath(url));
-      ok( !blacklisted, "Valid URL: " + url );
+      var cleaned = jQuery('<ul/>').scGMail('filteredPath', extractPath(url));
+      ok( cleaned, "We expect path not to be filtered: " + url );
     });
-  });
 
-  test("should filter blacklisted URLS", function() {
     $.each(blacklistedUrls, function(index, url) {
-      blacklisted = jQuery('<ul/>').scGMail('blacklistedSoundcloudPath', extractPath(url));
-      ok( blacklisted, "Blacklisted URL: " + url );
+      var cleaned = jQuery('<ul/>').scGMail('filteredPath', extractPath(url));
+      ok( !cleaned, "We expect path to be filtered: " + url );
     });
   });
 
+  test("inital dom node", 6, function() {
+    var $node = jQuery('<div/>').scGMail(createMatches(validUrls), { callback : function(listSize, listHeight) {
+      equal( 5, listSize, "We expect list to be " + listSize );
+    }});
+    equal( $node.find('ul').length, 1, "We expect UL to be added" );
+    equal( $node.find('ul li').length, 5, "We expect li to be added to ul" );
+    equal( $node.find('ul li:first-child object').length, 1, "We expect object to be added to li" );
+    equal( $node.find('ul li:first-child object param').length, 2, "We expect param to be added to object" );
+    equal( $node.find('ul li:first-child object embed').length, 1, "We expect embed to be added to object" );
+  });
 
-
+  /**
+   * Helper functions to perpare fictures
+   */
   function extractPath(url) {
     host = 'soundcloud.com';
     return url.substr(url.toLowerCase().indexOf(host) + host.length);
+  }
+
+  function createMatches(urls) {
+    return $.map(urls, function(url, index) {
+      return { path : extractPath(url) };
+    });
   }
 });

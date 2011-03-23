@@ -44,30 +44,34 @@
     splitPath : function(urlPath) {
       urlPath = urlPath.split('?')[0]; //strip vars
       urlPath = urlPath.split('#')[0]; //strip anchors
-      return jQuery.grep(urlPath.split('/'), function(element, index){
+      return $.grep(urlPath.split('/'), function(element, index){
         return (element.length > 1);
       });
     },
 
-    blacklistedSoundcloudPath : function(urlPath) {
+    filteredPath : function(urlPath) {
       var slices = $.map( methods.splitPath(urlPath), function(element, index) {
         return element.toLowerCase();
       });
 
       //match sets
       if( slices.length === 3 && slices[1] === 'sets' ) {
-        return false;
+        return slices.join('/');
       }
       //match tracks
-      if( slices.length === 2 && jQuery.inArray(slices[0], reservedUsers) === -1 && jQuery.inArray(slices[1], reservedTitles) === -1 ) {
-        return false;
+      if( slices.length === 2 && $.inArray(slices[0], reservedUsers) === -1 && $.inArray(slices[1], reservedTitles) === -1 ) {
+        return slices.join('/');
       }
-      return true;
+      return false;
     },
 
-    playerCode : function(url, height) {
-      url = encodeURIComponent(url);
-      return '<object height="' + height + '" width="100%"> <param name="movie" value="http://player.soundcloud.com/player.swf?url=' + url + '"></param> <param name="allowscriptaccess" value="always"></param> <embed allowscriptaccess="always" height="' + height + '" src="http://player.soundcloud.com/player.swf?url=' + url + '" type="application/x-shockwave-flash" width="100%"></embed></object>';
+    playerCode : function(path, height) {
+      url = encodeURIComponent('http://soundcloud.com' + path);
+      return '<object height="' + height + '" width="100%"> \
+         <param name="movie" value="http://player.soundcloud.com/player.swf?url=' + url + '"></param> \
+         <param name="allowscriptaccess" value="always"></param> \
+         <embed allowscriptaccess="always" height="' + height + '" src="http://player.soundcloud.com/player.swf?url=' + url + '" type="application/x-shockwave-flash" width="100%"></embed> \
+       </object>';
     },
 
     init : function( matches, options ) {
@@ -82,22 +86,27 @@
       return this.each(function() {
         var $this = $(this),
             curHeight,
+            list = {},
             listSize = 0,
             listHeight = 0;
+
+        $this = $this.is('ul') ? $this : $('<ul />').appendTo($this);
 
         // Iterate through the array and display output for each match.
         $.each(matches, function(index, match) {
           console.log(match);
-          if( !methods.blacklistedSoundcloudPath(match['path']) ) {
+          path = methods.filteredPath(match['path']);
+          if( path && !list[path] ) {
+            curHeight = (path.search(/\/sets\//i) != -1) ? options.setsHeight : options.singleHeight;
+            $('<li />').append(methods.playerCode('/' + path, curHeight)).appendTo($this);
             listSize += 1;
-            curHeight = (match['path'].search(/\/sets\//i) != -1) ? options.setsHeight : options.singleHeight;
             listHeight += curHeight + 10;
-            $('<li />').append(methods.playerCode(match['url'], curHeight)).appendTo($this);
+            list[path] = true;
           }
         });
 
         if($.isFunction(options.callback)) {
-          options.callback(listSize, listHeight);
+          options.callback(listSize, listHeight, list);
         }
       });
     }
