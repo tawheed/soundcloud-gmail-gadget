@@ -14,6 +14,8 @@
       </Param>
     </Require>
 
+    <Icon>http://soundcloud.com/favicon.ico</Icon>
+
   </ModulePrefs>
   <Content type="html" view="card">
     <![CDATA[

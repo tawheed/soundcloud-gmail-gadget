@@ -34,9 +34,8 @@
 <Extension id="linkExtractor" type="contextExtractor">
   <Name>Link Extractor</Name>
   <Url>google.com:HttpLinkExtractor</Url>
-  <Param name="url" value="soundcloud.com\/([^\/]+)\/(sets\/)?([^\/]+)"/>
+  <Param name="url" value="https?:\/\/(www\.)?soundcloud.com\/([^\/]+)\/(sets\/)?([^\/]+)(\/)?(\?.+)?(#.+)?$"/>
   <Triggers ref="SoundCloudGadget"/>
-  <Scope ref="emailSubject"/>
   <Scope ref="emailBody"/>
   <Container name="mail"/>
 </Extension>
@@ -52,17 +51,9 @@
 </Extension>
 
 <!-- SCOPE -->
-
-<Scope id="emailSubject">
-  <Url>tag:google.com,2010:auth/contextual/extractor/SUBJECT</Url>
-  <Reason>This application searches the Subject: line of each email
-  for SoundCloud links</Reason>
-</Scope>
-
 <Scope id="emailBody">
   <Url>tag:google.com,2010:auth/contextual/extractor/BODY</Url>
-  <Reason>This application searches the message body of each email
-  for SoundCloud links</Reason>
+  <Reason>This application searches the message body of each email for SoundCloud links</Reason>
 </Scope>
 
 </ApplicationManifest>
