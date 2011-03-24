@@ -1,4 +1,6 @@
-#^([^d].*)|(d(([^r].*)|(r.+)))$
+#
+# Small scrip to generate a RegExp to exclude a string without(!) lookahead
+#
 def exclude(str, lim = nil)
   limiter = lim ? "[^#{lim}]" : "."
   char    = str[0]
@@ -6,10 +8,14 @@ def exclude(str, lim = nil)
   "([^#{char}]#{limiter}*)|(#{char}#{extends})"
 end
 
+#
+# cleanup and transform into proper  RegExp
+#
 def finalize(exp)
   '^' + exp.delete("\n").delete(" ").gsub('/', '\/') + '$'
 end
 
+#  Google Gadget Matching RegExp
 application_manifest_pattern = <<-EXP
 (https?://)?
 (
@@ -41,7 +47,7 @@ application_manifest_pattern = <<-EXP
 ((\\\?|#).*)?
 EXP
 
-####################################################################
+####################### TEST #############################################
 
 tests = {
   'd'       => %w(dr tr),
@@ -51,7 +57,7 @@ tests = {
 
 tests.each do |key, shoulds|
   exp = finalize(exclude(key, '/') + "/")
-  puts "#{key} - #{exp}"
+  puts "Test #{key} - #{exp}"
   regexp = Regexp.new( exp )
   shoulds.each do |should|
     puts "FAILED: #{should}" unless regexp.match(should + "/")
@@ -95,8 +101,8 @@ http://snd.sc/asd/?
 http://snd.sc/asd/?asd
 http://snd.sc/asd/?asd=)
 
-
-puts exp = finalize(application_manifest_pattern)
+exp = finalize(application_manifest_pattern)
+puts "Test Application Manifest Pattern - #{exp}"
 regexp = Regexp.new(exp, true)
 invalid.each do |should|
   puts "FAILED: #{should}" if regexp.match(should)
