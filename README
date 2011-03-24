@@ -16,14 +16,14 @@ fully QUnit tested.
 === Other
   Apply for custom extractors: http://developer.googleapps.com/preview
 
+ GA Code: UA-2519404-15
 
 == Testing
  To run tests, load test.html in any browser
 
-
 == TODO
  - Show all
- - check HTML LINKS
  - move to static host
-- gif icon
+ - gif icon
+
  - CHECK APPL LINK

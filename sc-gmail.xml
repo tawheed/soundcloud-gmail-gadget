@@ -9,45 +9,79 @@
     author_email="eric@soundcloud.com"
     author_location="Berlin, Germany">
 
+    <Icon type="image/gif">http://sc.warteschlange.de/sc-icon.gif</Icon>
+
     <Require feature="dynamic-height"/>
     <Require feature="google.contentmatch">
       <Param name="extractors">
         google.com:HttpLinkExtractor
       </Param>
     </Require>
-
-    <Icon>http://soundcloud.com/favicon.ico</Icon>
-
   </ModulePrefs>
   <Content type="html" view="card">
     <![CDATA[
-      <style type="text/css">
-        body {
-          background: transparent
-        }
-
-        li {
-          list-style-type: none;
-          padding: 0 0 10px 0;
-          margin: 0;
-        }
-        ul {
-          padding: 0;
-          margin: 0;
-        }
-      </style>
-      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-      <script type="text/javascript" src="http://sc.warteschlange.de/sc-gmail.js"></script>
-      <script type="text/javascript">
-        $(document).ready(function() {
-          jQuery(document.body).scGMail( google.contentmatch.getContentMatches(), { callback: function(listSize, listHeight, list){
-              if( listHeight > 0 ) {
-                gadgets.window.adjustHeight(listHeight);
+    <style type="text/css">
+      body {
+        background: transparent
+      }
+      ul {
+        padding: 0;
+        margin: 0;
+      }
+      li {
+        list-style-type: none;
+        padding: 0 0 10px 0;
+        margin: 0;
+        display: none;
+      }
+      a {
+        display: none;
+      }
+    </style>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://sc.warteschlange.de/sc-gmail.js"></script>
+    <script type="text/javascript">
+      jQuery(document).ready(function() {
+        $('ul').scGMail( google.contentmatch.getContentMatches(), { callback: function(list){
+            var cnt = 0, min = 20, max = 20;
+            $.each( list, function(url, height){
+              if( cnt < 3) {
+                min += height + 15;
+              }
+              max += height + 15;
+              cnt += 1;
+            });
+            if( cnt > 0 ) {
+              $('li').slice(0,3).show();
+              gadgets.window.adjustHeight(min);
+              if( cnt > 3 ) {
+                $('a.show')
+                  .html('Show ' + (cnt - 3) + ' more')
+                  .click( function(event) {
+                     gadgets.window.adjustHeight(max);
+                     $('li').slice(3).show();
+                     $('a.hide').show();
+                     $(event.target).hide();
+                   })
+                  .show();
+                $('a.hide')
+                  .click( function(event) {
+                     gadgets.window.adjustHeight(min);
+                     $('li').slice(3).hide();
+                     $('a.show').show();
+                     $(event.target).hide();
+                   });
               }
             }
-          });
+          }
         });
-      </script>
+      });
+    </script>
+    <body>
+      <ul></ul>
+      <a href="#" class="show">Show more</a>
+      <a href="#" class="hide">Hide</a>
+    </body>
     ]]>
   </Content>
 </Module>

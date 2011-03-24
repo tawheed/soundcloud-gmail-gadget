@@ -91,8 +91,7 @@
     init : function( matches, options ) {
       options = $.extend(true, {
         singleHeight: 81,
-        setsHeight: 200,
-        linePadding: 15
+        setsHeight: 200
       }, options);
 
       /**
@@ -100,8 +99,6 @@
        */
       return this.each(function() {
         var $this = $(this),
-            listSize = 0,
-            listHeight = 0,
             list = {},
             curHeight;
 
@@ -111,17 +108,14 @@
         $.each(matches, function(index, match) {
           var url = (match.host.indexOf('snd.sc') !== -1) ? match.url : methods.filteredUrl(match.path);
           if( url && !list[url] ) {
-            curHeight = (url.search(/\/sets\//i) !== -1) ? options.setsHeight : options.singleHeight;
-            $('<li />').append(methods.playerCode(url, curHeight)).appendTo($this);
-            listSize += 1;
-            listHeight += curHeight + options.linePadding;
-            list[url] = true;
+            list[url] = (url.search(/\/sets\//i) !== -1) ? options.setsHeight : options.singleHeight;
+            $('<li />').append(methods.playerCode(url, list[url])).appendTo($this);
           }
         });
 
         //trigger callback
         if($.isFunction(options.callback)) {
-          options.callback(listSize, listHeight, list);
+          options.callback(list);
         }
       });
     }

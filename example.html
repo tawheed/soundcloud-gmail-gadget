@@ -6,15 +6,18 @@
       body {
         background: transparent
       }
-
+      ul {
+        padding: 0;
+        margin: 0;
+      }
       li {
         list-style-type: none;
         padding: 0 0 10px 0;
         margin: 0;
+        display: none;
       }
-      ul {
-        padding: 0;
-        margin: 0;
+      a {
+        display: none;
       }
     </style>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
@@ -22,19 +25,57 @@
     <script type="text/javascript" src="jQuery-URL-Parser/jquery.url.js"></script>
     <script type="text/javascript" src="test-helper.js"></script>
     <script type="text/javascript">
-      $(document).ready(function() {
+      jQuery(document).ready(function() {
         var validUrls = [
          'http://soundcloud.com/forss/soulhack',
          'http://soundcloud.com/forss/soulhack?asd',
-         'http://soundcloud.com/forss/soulhack/asd'
+         'http://soundcloud.com/forss/sets/soulhack',
+         'http://soundcloud.com/mightyoaksmusic/driftwood-seat?test=asd',
+         'http://soundcloud.com/ma_remix/mein-lieblings-obst-sind#comment',
+         'http://soundcloud.com/jberkel/sitting-on-the-dock-of-the-bay?test=asd&sdf=asd#comment',
+         'http://soundcloud.com/hopit/sounds-from-sunday-morning/s-NUtxs',
+         'http://soundcloud.com/hopit/3d-record-at-transit-on/s-1ziKa'
         ];
-        jQuery(document.body).scGMail( createMatches(validUrls), { callback: function(listSize, listHeight, list){
+        jQuery('ul').scGMail( createMatches(validUrls), { callback: function(list){
+            var cnt = 0, min = 0, max = 0;
+            $.each( list, function(url, height){
+              if( cnt < 3) {
+                min += height;
+              }
+              max += height;
+              cnt += 1;
+            });
+            if( cnt > 0 ) {
+              jQuery('li').slice(0,3).show();
+              console.log(min);
+              if( cnt > 3 ) {
+                jQuery('a.show')
+                  .html('Show ' + (cnt - 3) + ' more')
+                  .click( function(event) {
+                     jQuery('li').slice(3).show();
+                     jQuery('a.hide').show();
+                     $(event.target).hide();
+                     console.log(max);
+                   })
+                  .show();
+                jQuery('a.hide')
+                  .click( function(event) {
+                     jQuery('li').slice(3).hide();
+                     jQuery('a.show').show();
+                     $(event.target).hide();
+                     console.log(min);
+                   });
+              }
+            }
           }
         });
       });
     </script>
   </head>
   <body>
+    <ul></ul>
+    <a href="#" class="show">Show more</a>
+    <a href="#" class="hide">Hide</a>
   </body>
 </html>
 

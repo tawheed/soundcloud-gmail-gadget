@@ -112,9 +112,15 @@ $(document).ready(function(){
     });
   });
 
-  test('inital dom node', 6, function() {
-    var $node = jQuery('<div/>').scGMail(createMatches(validUrls.concat(validExternalUrls)), { callback : function(listSize, listHeight) {
-      equal( 12, listSize, 'We expect list to be ' + listSize );
+  test('inital dom node', 7, function() {
+    var $node = jQuery('<div/>').scGMail(createMatches(validUrls.concat(validExternalUrls)), { callback : function(list) {
+      var cnt = 0, maxHeight = 0;
+      $.each(list, function(url, height) {
+        cnt += 1;
+        maxHeight += height;
+      });
+      equal( 12, cnt, 'We expect list to have ' + cnt + ' elements');
+      equal( 1210, maxHeight, 'We expect list to have ' + maxHeight + ' height');
     }});
     equal( $node.find('ul').length, 1, 'We expect UL to be added' );
     equal( $node.find('ul li').length, 12, 'We expect li to be added to ul' );
