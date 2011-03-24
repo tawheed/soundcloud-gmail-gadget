@@ -25,7 +25,8 @@ application_manifest_pattern = <<-EXP
   soundcloud\.com/
   [^/]+/
   (
-    sets/[^/]+
+    sets/
+    [^/]+
   |
     #{exclude('dropbox', '/')}
   )
@@ -100,75 +101,3 @@ end
 valid.each do |should|
   puts "FAILED: #{should}" unless regexp.match(should)
 end
-
-patternOLD = <<-EXP
-[^d/][^/]*
-|
-d
-(
-  [^r/][^/]*
-  |
-  r
-  (
-    [^o/][^/]*
-    |
-    o
-    (
-      [^p/][^/]*
-      |
-      p
-      (
-        [^b/][^/]*
-        |
-        b
-        (
-          [^o/][^/]*
-          |
-          o
-          (
-            [^x/][^/]*
-            |
-            x[^/]+
-          )
-        )
-      )
-    )
-  )
-)
-EXP
-
-patterNew = <<-EXP
-[^d][^/]*
-|
-d
-(
-  [^r][^/]*
-  |
-  r
-  (
-    [^o][^/]*
-    |
-    o
-    (
-      [^p][^/]*
-      |
-      p
-      (
-        [^b][^/]*
-        |
-        b
-        (
-          [^o][^/]*
-          |
-          o
-          (
-            [^x][^/]*
-            |
-            x[^/]+
-          )?
-        )?
-      )?
-    )?
-  )?
-)?
-EXP
