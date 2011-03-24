@@ -1,7 +1,8 @@
 == SoundCloud GMail Gadget
 
-A Gmail Gadget to display the SoundCloud Player inline for any valid SoundCloud URLS within the mail body. It's
-realized as a jQuery Plugin with minimal dependencies on the gadget Framework itself and therefor fully QUnit tested.
+A Gmail Gadget to display the SoundCloud Player inline within GMail for any valid SoundCloud URL extracted forom the
+mail body. It's written as a jQuery Plugin, with minimal dependencies on the gadget Framework itself and therefor
+fully QUnit tested.
 
 == Development
  Devlopers Guide: http://code.google.com/apis/gmail/gadgets/contextual/
@@ -19,3 +20,10 @@ realized as a jQuery Plugin with minimal dependencies on the gadget Framework it
 == Testing
  To run tests, load test.html in any browser
 
+
+== TODO
+ - Show all
+ - check HTML LINKS
+ - move to static host
+- gif icon
+ - CHECK APPL LINK

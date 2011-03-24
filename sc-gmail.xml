@@ -4,7 +4,7 @@
     title="SoundCloud"
     title_url="http://soundcloud.com/"
     description="Tracks from this email"
-    height="0"
+    height="20"
     author="Eric Wahlforss"
     author_email="eric@soundcloud.com"
     author_location="Berlin, Germany">
@@ -36,15 +36,17 @@
           margin: 0;
         }
       </style>
-      <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
-      <script type='text/javascript' src='http://sc.warteschlange.de/sc-gmail.js'></script>
-      <script type='text/javascript'>
-        jQuery(document.body).scGMail( google.contentmatch.getContentMatches(), { callback: function(listSize, listHeight, list){
-          if( listHeight > 0 ) {
-            gadgets.window.adjustHeight(listHeight);
-          }
-        }
-       });
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+      <script type="text/javascript" src="http://sc.warteschlange.de/sc-gmail.js"></script>
+      <script type="text/javascript">
+        $(document).ready(function() {
+          jQuery(document.body).scGMail( google.contentmatch.getContentMatches(), { callback: function(listSize, listHeight, list){
+              if( listHeight > 0 ) {
+                gadgets.window.adjustHeight(listHeight);
+              }
+            }
+          });
+        });
       </script>
     ]]>
   </Content>

@@ -1,6 +1,9 @@
-
+/**
+ * qUnit Tests for scGmail Plugin
+ */
 $(document).ready(function(){
 
+  //Fixtures
   var validUrls = [
         'http://soundcloud.com/forss/soulhack',
         'http://www.soundcloud.com/forss/soulhack',
@@ -10,12 +13,20 @@ $(document).ready(function(){
         'HTTP://SOUNDCLOUD.COM/FORSS/SETS/SOULHACK',
         'http://soundcloud.com/forss/sets/soulhack/',
         'http://soundcloud.com/forss/sets/soulhack/?test=asd',
-        'http://soundcloud.com/forss/sets/soulhack',
+        'soundcloud.com/forss/sets/soulhack',
         'http://soundcloud.com/username/sets/dropbox',
         'http://soundcloud.com/mightyoaksmusic/driftwood-seat?test=asd',
         'http://soundcloud.com/ma_remix/mein-lieblings-obst-sind#comment',
-        'http://soundcloud.com/jberkel/sitting-on-the-dock-of-the-bay?test=asd&sdf=asd#comment'
+        'http://soundcloud.com/jberkel/sitting-on-the-dock-of-the-bay?test=asd&sdf=asd#comment',
+        'http://soundcloud.com/hopit/sounds-from-sunday-morning/s-NUtxs',
+        'http://soundcloud.com/hopit/3d-record-at-transit-on/s-1ziKa'
         ],
+      validExternalUrls = [
+       'https://snd.sc/asd',
+       'http://snd.sc/asd',
+       'http://snd.sc/asd/',
+       'http://snd.sc/asd/?asd=asd'
+      ],
       blacklistedUrls = [
         'http://soundcloud.com/pages/support?utm_campaign=direct&utm_content=welcome_email&utm_medium=notification&utm_source=soundcloud&utm_term=20101025',
         'http://soundcloud.com/emails/1aa8eebcf?utm_campaign=direct&utm_content=welcome_email&utm_medium=notification&utm_source=soundcloud&utm_term=20101025',
@@ -50,12 +61,15 @@ $(document).ready(function(){
         'http://soundcloud.com/premium'
         ];
 
+  var applicationManifestPattern = /^(https?:\/\/)?((snd.sc\/[^\/]+)|((www.)?soundcloud.com\/[^\/]+\/((sets\/[^\/]+)|([^d][^\/]*)|(d(([^r][^\/]*)|(r(([^o][^\/]*)|(o(([^p][^\/]*)|(p(([^b][^\/]*)|(b(([^o][^\/]*)|(o(([^x][^\/]*)|(x[^\/]+))?))?))?))?))?))?))(\/s-[^\/]+)?))(\/)?((\?|#).*)?$/i;
+
   module("Application Manifest");
-
-  var applicationManifestPattern = /https?\:\/\/(www\.)?soundcloud.com\/([^\/]+)\/(?!dropbox)(sets\/)?([^\/]+)(\/)?(\?.+)?(#.+)?$/i;
-
-  test('match URLS', 42, function() {
+  test('match URLS', 48, function() {
     $.each(validUrls, function(index, url) {
+      ok( applicationManifestPattern.test(url), 'We expect url to be valid: ' + url );
+    });
+
+    $.each(validExternalUrls, function(index, url) {
       ok( applicationManifestPattern.test(url), 'We expect url to be valid: ' + url );
     });
 
@@ -86,40 +100,27 @@ $(document).ready(function(){
     });
   });
 
-  test('filteredPath: filter path', 32, function() {
+  test('filteredUrl: filter path', 34, function() {
     $.each(validUrls, function(index, url) {
-      var cleaned = jQuery('<ul/>').scGMail('filteredPath', extractPath(url));
+      var cleaned = jQuery('<ul/>').scGMail('filteredUrl', extractPath(url));
       ok( cleaned, 'We expect path not to be filtered: ' + url );
     });
 
     $.each(blacklistedUrls, function(index, url) {
-      var cleaned = jQuery('<ul/>').scGMail('filteredPath', extractPath(url));
+      var cleaned = jQuery('<ul/>').scGMail('filteredUrl', extractPath(url));
       ok( !cleaned, 'We expect path to be filtered: ' + url );
     });
   });
 
   test('inital dom node', 6, function() {
-    var $node = jQuery('<div/>').scGMail(createMatches(validUrls), { callback : function(listSize, listHeight) {
-      equal( 6, listSize, 'We expect list to be ' + listSize );
+    var $node = jQuery('<div/>').scGMail(createMatches(validUrls.concat(validExternalUrls)), { callback : function(listSize, listHeight) {
+      equal( 12, listSize, 'We expect list to be ' + listSize );
     }});
     equal( $node.find('ul').length, 1, 'We expect UL to be added' );
-    equal( $node.find('ul li').length, 6, 'We expect li to be added to ul' );
+    equal( $node.find('ul li').length, 12, 'We expect li to be added to ul' );
     equal( $node.find('ul li:first-child object').length, 1, 'We expect object to be added to li' );
     equal( $node.find('ul li:first-child object param').length, 2, 'We expect param to be added to object' );
     equal( $node.find('ul li:first-child object embed').length, 1, 'We expect embed to be added to object' );
   });
 
-  /**
-   * Helper functions to perpare fictures
-   */
-  function extractPath(url) {
-    host = 'soundcloud.com';
-    return url.substr(url.toLowerCase().indexOf(host) + host.length);
-  }
-
-  function createMatches(urls) {
-    return $.map(urls, function(url, index) {
-      return { path : extractPath(url) };
-    });
-  }
 });
