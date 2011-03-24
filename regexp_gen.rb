@@ -5,7 +5,7 @@ def exclude(str, lim = nil)
   limiter = lim ? "[^#{lim}]" : "."
   char    = str[0]
   extends = (str.size > 1) ? "(#{exclude(str[1..-1], lim)})?" : "#{limiter}+"
-  "([^#{char}]#{limiter}*)|(#{char}#{extends})"
+  "[^#{char}]#{limiter}*|#{char}#{extends}"
 end
 
 #
@@ -19,29 +19,17 @@ end
 application_manifest_pattern = <<-EXP
 (https?://)?
 (
+  snd.sc/[^/]+
+|
+  (www\.)?
+  soundcloud\.com/
+  [^/]+/
   (
-    snd.sc
-    /
-    [^/]+
-  )
+    sets/[^/]+
   |
-  (
-    (www\.)?
-    soundcloud\.com
-    /
-    [^/]+
-    /
-    (
-      (
-        sets
-        /
-        [^/]+
-      )
-      |
-      #{exclude('dropbox', '/')}
-    )
-    (/s-[^/]+)?
+    #{exclude('dropbox', '/')}
   )
+  (/s-[^/]+)?
 )
 (/)?
 ((\\\?|#).*)?
@@ -101,6 +89,7 @@ http://snd.sc/asd/?
 http://snd.sc/asd/?asd
 http://snd.sc/asd/?asd=)
 
+
 exp = finalize(application_manifest_pattern)
 puts "Test Application Manifest Pattern - #{exp}"
 regexp = Regexp.new(exp, true)
@@ -112,3 +101,74 @@ valid.each do |should|
   puts "FAILED: #{should}" unless regexp.match(should)
 end
 
+patternOLD = <<-EXP
+[^d/][^/]*
+|
+d
+(
+  [^r/][^/]*
+  |
+  r
+  (
+    [^o/][^/]*
+    |
+    o
+    (
+      [^p/][^/]*
+      |
+      p
+      (
+        [^b/][^/]*
+        |
+        b
+        (
+          [^o/][^/]*
+          |
+          o
+          (
+            [^x/][^/]*
+            |
+            x[^/]+
+          )
+        )
+      )
+    )
+  )
+)
+EXP
+
+patterNew = <<-EXP
+[^d][^/]*
+|
+d
+(
+  [^r][^/]*
+  |
+  r
+  (
+    [^o][^/]*
+    |
+    o
+    (
+      [^p][^/]*
+      |
+      p
+      (
+        [^b][^/]*
+        |
+        b
+        (
+          [^o][^/]*
+          |
+          o
+          (
+            [^x][^/]*
+            |
+            x[^/]+
+          )?
+        )?
+      )?
+    )?
+  )?
+)?
+EXP
