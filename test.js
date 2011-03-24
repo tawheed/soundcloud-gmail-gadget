@@ -61,7 +61,7 @@ $(document).ready(function(){
         'http://soundcloud.com/premium'
         ];
 
-  var applicationManifestPattern = /^(https?:\/\/)?((snd.sc\/[^\/]+)|((www.)?soundcloud.com\/[^\/]+\/((sets\/[^\/]+)|([^d][^\/]*)|(d(([^r][^\/]*)|(r(([^o][^\/]*)|(o(([^p][^\/]*)|(p(([^b][^\/]*)|(b(([^o][^\/]*)|(o(([^x][^\/]*)|(x[^\/]+))?))?))?))?))?))?))(\/s-[^\/]+)?))(\/)?((\?|#).*)?$/i;
+  var applicationManifestPattern = /^(https?:\/\/)?(snd.sc\/[^\/]+|(www.)?soundcloud.com\/[^\/]+\/(sets\/[^\/]+|[^d][^\/]*|d([^r][^\/]*|r([^o][^\/]*|o([^p][^\/]*|p([^b][^\/]*|b([^o][^\/]*|o([^x][^\/]*|x[^\/]+)?)?)?)?)?)?)(\/s-[^\/]+)?)(\/)?((\?|#).*)?$/i;
 
   module("Application Manifest");
   test('match URLS', 48, function() {

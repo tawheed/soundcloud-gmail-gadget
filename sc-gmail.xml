@@ -22,7 +22,13 @@
     <![CDATA[
     <style type="text/css">
       body {
-        background: transparent
+        background: transparent;
+        font-size: 13px;
+        font-family: arial, sans-serif;
+        color: #55688A;
+      }
+      .header {
+        margin: 0px 0px 3px 3px;
       }
       ul {
         padding: 0;
@@ -35,6 +41,7 @@
         display: none;
       }
       a {
+        color: #55688A;
         display: none;
       }
     </style>
@@ -42,45 +49,38 @@
     <script type="text/javascript" src="http://sc.warteschlange.de/sc-gmail.js"></script>
     <script type="text/javascript">
       jQuery(document).ready(function() {
-        $('ul').scGMail( google.contentmatch.getContentMatches(), { callback: function(list){
-            var cnt = 0, min = 20, max = 20;
-            $.each( list, function(url, height){
-              if( cnt < 3) {
-                min += height + 15;
-              }
-              max += height + 15;
-              cnt += 1;
-            });
-            if( cnt > 0 ) {
+        $(document.body).scGMail( google.contentmatch.getContentMatches(),
+          { callback: function(list){
+              var heights = [15, 15], cnt = 0, scnt = 0, linePadding = 15;
+              $.each( list, function(url, height){
+                if( cnt < 3) {
+                  heights[0] += height + linePadding;
+                }
+                heights[1] += height + linePadding;
+                cnt += 1;
+              });
               $('li').slice(0,3).show();
-              gadgets.window.adjustHeight(min);
+              gadgets.window.adjustHeight(heights[0]);
               if( cnt > 3 ) {
-                $('a.show')
-                  .html('Show ' + (cnt - 3) + ' more')
-                  .click( function(event) {
-                     gadgets.window.adjustHeight(max);
-                     $('li').slice(3).show();
-                     $('a.hide').show();
-                     $(event.target).hide();
-                   })
-                  .show();
-                $('a.hide')
-                  .click( function(event) {
-                     gadgets.window.adjustHeight(min);
-                     $('li').slice(3).hide();
-                     $('a.show').show();
-                     $(event.target).hide();
-                   });
+                $('a')
+                 .click( function() {
+                    gadgets.window.adjustHeight(heights[(scnt+=1) % 2]);
+                    $('li').slice(3).add('a').toggle();
+                  })
+                 .filter('.show')
+                 .html('Show ' + (cnt - 3) + ' more')
+                 .show();
               }
             }
           }
-        });
+        );
       });
     </script>
     <body>
-      <ul></ul>
-      <a href="#" class="show">Show more</a>
-      <a href="#" class="hide">Hide</a>
+      <div class="header">
+        <a href="#" class="show">Show more</a>
+        <a href="#">Hide</a>
+      </div>
     </body>
     ]]>
   </Content>
