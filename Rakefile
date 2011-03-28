@@ -23,8 +23,8 @@ desc "Build example"
 task :build_example do
   files = %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js test/jQuery-URL-Parser/jquery.url.js test/test-helper.js)
   `juicer -q merge -s -f -o sc-gmail.js #{files.join(' ')}`
-  `echo "@styles = File.open('src/sc-gmail/styles.css').read" > example.rb`
-  `echo "@javascripts = File.open('sc-gmail.js').read" >> example.rb`
+  `echo "@styles = File.open('src/sc-gmail/styles.css').read" > gadget.rb`
+  `echo "@javascripts = File.open('sc-gmail.js').read" >> gadget.rb`
   `erubis -E PrintOut -l ruby src/sc-gmail/gadget.html.erb  >> gadget.rb`
   `ruby gadget.rb > example.html`
   `rm -f sc-gmail.js gadget.rb`
