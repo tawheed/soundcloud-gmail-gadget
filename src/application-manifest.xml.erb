@@ -1,3 +1,5 @@
+<% require './lib/application_manifest_pattern' %>
+
 <?xml version="1.0" encoding="UTF-8" ?>
 <ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009">
 
@@ -34,7 +36,7 @@
 <Extension id="linkExtractor" type="contextExtractor">
   <Name>Link Extractor</Name>
   <Url>google.com:HttpLinkExtractor</Url>
-  <Param name="url" value="^(https?:\/\/)?(snd.sc\/[^\/]+|(www.)?soundcloud.com\/[^\/]+\/(sets\/[^\/]+|[^d][^\/]*|d([^r][^\/]*|r([^o][^\/]*|o([^p][^\/]*|p([^b][^\/]*|b([^o][^\/]*|o([^x][^\/]*|x[^\/]+)?)?)?)?)?)?)(\/s-[^\/]+)?)(\/)?((\?|#).*)?$"/>
+  <Param name="url" value="<%= ApplicationManifestPattern::get %>"/>
   <Triggers ref="SoundCloudGadget"/>
   <Scope ref="emailBody"/>
   <Container name="mail"/>

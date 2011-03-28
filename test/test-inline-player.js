@@ -1,5 +1,5 @@
 /**
- * qUnit Tests for scGmail Plugin
+ * qUnit Tests for inlinePlayer Plugin
  */
 $(document).ready(function(){
 
@@ -47,42 +47,9 @@ $(document).ready(function(){
         'http://soundcloud.com/pages/trackname',
         'http://soundcloud.com/robots/trackname',
         'http://soundcloud.com/search/trackname'
-        ],
-      invalidUrls = [
-        'http://soundcloud.com/forss/soulhack/fake',
-        'http://soundcloud.com/ryan-15-5/random-audio-test/for/9fcf39?utm_campaign=bulk&utm_content=track_invitation&utm_medium=notification&utm_source=soundcloud&utm_term=20101005',
-        'http://soundcloud.com/?utm_campaign=direct&utm_content=welcome_email&utm_medium=notification&utm_source=soundcloud&utm_term=20101025',
-        'http://support.soundcloud.com/',
-        'http://soundcloud.com/username/dropbox',
-        'http://support.soundcloud.com/user/track',
-        'http://soundcloud.com/help',
-        'http://soundcloud.com/101',
-        'http://soundcloud.com/tour',
-        'http://soundcloud.com/premium'
         ];
 
-  var applicationManifestPattern = /^(https?:\/\/)?(snd.sc\/[^\/]+|(www.)?soundcloud.com\/[^\/]+\/(sets\/[^\/]+|[^d][^\/]*|d([^r][^\/]*|r([^o][^\/]*|o([^p][^\/]*|p([^b][^\/]*|b([^o][^\/]*|o([^x][^\/]*|x[^\/]+)?)?)?)?)?)?)(\/s-[^\/]+)?)(\/)?((\?|#).*)?$/i;
-
-  module("Application Manifest");
-  test('match URLS', 48, function() {
-    $.each(validUrls, function(index, url) {
-      ok( applicationManifestPattern.test(url), 'We expect url to be valid: ' + url );
-    });
-
-    $.each(validExternalUrls, function(index, url) {
-      ok( applicationManifestPattern.test(url), 'We expect url to be valid: ' + url );
-    });
-
-    $.each(blacklistedUrls, function(index, url) {
-      ok( applicationManifestPattern.test(url), 'We expect url to be valid: ' + url );
-    });
-
-    $.each(invalidUrls, function(index, url) {
-      ok( !applicationManifestPattern.test(url), 'We expect url to be invalid: ' + url );
-    });
-  });
-
-  module('jQuery.scGMail');
+  module('jQuery.inlinePlayer');
   test('splitPath: split path', 7, function() {
     validPaths = {
       '/forss/sets/soulhack/?test=asd' : ['forss', 'sets', 'soulhack'],
@@ -95,25 +62,25 @@ $(document).ready(function(){
     };
 
     $.each(validPaths, function(path, should) {
-      var is = jQuery('<ul/>').scGMail('splitPath', path);
+      var is = jQuery('<ul/>').inlinePlayer('splitPath', path);
       deepEqual( should, is, 'We expect ' + path + ' to be ' + should );
     });
   });
 
   test('filteredUrl: filter path', 34, function() {
     $.each(validUrls, function(index, url) {
-      var cleaned = jQuery('<ul/>').scGMail('filteredUrl', extractPath(url));
+      var cleaned = jQuery('<ul/>').inlinePlayer('filteredUrl', extractPath(url));
       ok( cleaned, 'We expect path not to be filtered: ' + url );
     });
 
     $.each(blacklistedUrls, function(index, url) {
-      var cleaned = jQuery('<ul/>').scGMail('filteredUrl', extractPath(url));
+      var cleaned = jQuery('<ul/>').inlinePlayer('filteredUrl', extractPath(url));
       ok( !cleaned, 'We expect path to be filtered: ' + url );
     });
   });
 
   test('inital dom node', 7, function() {
-    var $node = jQuery('<div/>').scGMail(createMatches(validUrls.concat(validExternalUrls)), { callback : function(list) {
+    var $node = jQuery('<div/>').inlinePlayer(createMatches(validUrls.concat(validExternalUrls)), { callback : function(list) {
       var cnt = 0, maxHeight = 0;
       $.each(list, function(url, height) {
         cnt += 1;

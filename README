@@ -16,11 +16,18 @@ fully QUnit tested.
 === Other
   Apply for custom extractors: http://developer.googleapps.com/preview
 
- GA Code: UA-2519404-15
+  GA Code: UA-2519404-15
+
+== Deploy
+  run "rake deploy"
+
+== Examples
+ To see exmaples, load example.html in any browser, pass wanted urls as 'urls' param:
+  example.html?urls=http://snd.sc/dUX0sF,http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1
 
 == Testing
- To run tests, load test.html in any browser
-
+ To run tests, load test/test.html in any browser
+ 
 == TODO
  - Show all
  - move to static host

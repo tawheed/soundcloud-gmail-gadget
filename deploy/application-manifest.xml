@@ -1,0 +1,60 @@
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009">
+
+<!-- Support info to show in the marketplace & control panel -->
+<Support>
+<!-- URL for application setup as an optional redirect during the install -->
+<!-- <Link rel="setup" href="http://example.com/google/setup.php?domain=${DOMAIN_NAME}" /> -->
+
+<!-- URL explaining how customers get support. -->
+<Link rel="support" href="http://support.soundcloud.com" />
+
+<!-- URL that is displayed to admins during the deletion process,
+     to specify policies such as data retention, how to claim accounts, etc. -->
+<Link rel="deletion-policy" href="http://support.soundcloud.com" />
+</Support>
+
+<!-- Name and description pulled from message bundles -->
+<Name>SoundCloud</Name>
+<Description>Shows SoundCloud tracks in emails</Description>
+
+<!-- Show this link in Google's universal navigation for all users -->
+<Extension id="navLink" type="link">
+<Name>SoundCloud</Name>
+<Url>http://soundcloud.com</Url>
+</Extension>
+
+<!-- Declare our OpenID realm so our app is white listed -->
+<!-- <Extension id="realm" type="openIdRealm">
+<Url>http://soundcloud.com</Url>
+</Extension> -->
+
+<!-- EXTRACTOR -->
+
+<Extension id="linkExtractor" type="contextExtractor">
+<Name>Link Extractor</Name>
+<Url>google.com:HttpLinkExtractor</Url>
+<Param name="url" value="^(https?:\/\/)?(snd.sc\/[^\/]+|(www.)?soundcloud.com\/[^\/]+\/(sets\/[^\/]+|[^d][^\/]*|d([^r][^\/]*|r([^o][^\/]*|o([^p][^\/]*|p([^b][^\/]*|b([^o][^\/]*|o([^x][^\/]*|x[^\/]+)?)?)?)?)?)?)(\/s-[^\/]+)?)(\/)?((\?|#).*)?$"/>
+<Triggers ref="SoundCloudGadget"/>
+<Scope ref="emailBody"/>
+<Container name="mail"/>
+</Extension>
+
+<!-- GADGET -->
+
+<Extension id="SoundCloudGadget" type="gadget">
+<Name>SoundCloud Gmail contextual gadget</Name>
+<Url>http://sc.warteschlange.de/sc-gmail.xml</Url>
+<Container name="mail"/>
+<!-- Uncomment this to enable Caja. -->
+<!-- <Param name="caja" value="enabled"/> -->
+</Extension>
+
+<!-- SCOPE -->
+<Scope id="emailBody">
+<Url>tag:google.com,2010:auth/contextual/extractor/BODY</Url>
+<Reason>This application searches the message body of each email for SoundCloud links</Reason>
+</Scope>
+
+</ApplicationManifest>

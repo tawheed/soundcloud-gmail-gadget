@@ -126,13 +126,13 @@
    * Plugin scope, check if function exits, fallback to main function
    * this is mainly done to be able to test internal functions
    */
-  $.fn.scGMail = function( method ) {
+  $.fn.inlinePlayer = function( method ) {
     if ( methods[method] ) {
       return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
     } else if ( typeof method === 'object' ) {
       return methods.init.apply( this, arguments );
     } else {
-      $.error( 'Method ' +  method + ' does not exist on jQuery.scGMail' );
+      $.error( 'Method ' +  method + ' does not exist on jQuery.inlinePlayer' );
       return false;
     }
   };
