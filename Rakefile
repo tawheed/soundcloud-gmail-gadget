@@ -74,10 +74,11 @@ task :release => :build do
   end
 
   sh <<-END
+    git checkout --track -b live origin/live
     git checkout live
     mv -f live/* .
     git commit -a --allow-empty -m 'Release #{version}'
-    git tag -a #{version} -m 'Version #{version}'
+    
     git push origin live
     git push origin --tags
     git checkout master
