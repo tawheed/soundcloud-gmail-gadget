@@ -2,11 +2,11 @@ require 'rake'
 
 desc "Build the gadget"
 task :build do
-  `rm -rf deploy`
-  `mkdir deploy`
+  `rm -rf live`
+  `mkdir live`
   files = %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js)
   `juicer -q merge -s -f -o sc-gmail.js #{files.join(' ')}`
-  `erubis -E DeleteIndent,PrintOut -l ruby src/application-manifest.xml.erb | ruby > deploy/application-manifest.xml`
+  `erubis -E DeleteIndent,PrintOut -l ruby src/application-manifest.xml.erb | ruby > live/application-manifest.xml`
   `echo "@styles = File.open('src/sc-gmail/styles.css').read" > gadget.rb`
   `echo "@javascripts = File.open('sc-gmail.js').read" >> gadget.rb`
   `erubis -E PrintOut -l ruby src/sc-gmail/gadget.html.erb  >> gadget.rb`
@@ -14,7 +14,7 @@ task :build do
 
   `echo "@gadget = File.open('sc-gmail.html').read" > sc-gmail.rb`
   `erubis -E PrintOut -l ruby src/sc-gmail.xml.erb  >> sc-gmail.rb`
-  `ruby sc-gmail.rb > deploy/sc-gmail.xml`
+  `ruby sc-gmail.rb > live/sc-gmail-gadget.xml`
   `rm -f sc-gmail.js gadget.rb sc-gmail.rb sc-gmail.html`
 end
 
@@ -40,7 +40,7 @@ end
 
 task :default => :test
 
-desc "Deploys gadget"
+desc "Deploys gadget to live branch"
 task :release => :build do
   unless `git branch` =~ /^\* master$/
     puts "You must be on the master branch to release!"
