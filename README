@@ -17,11 +17,11 @@ fully QUnit tested.
   and pushes those to github live branch.
 
 == Examples
- To see working example, run 'rake example' and load example.html in any browser. Pass wanted urls as 'urls' param:
-  example.html?urls=http://snd.sc/dUX0sF,http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1
+ To see working example, run 'rake build_example' and load sc-gmail.html in any browser. Pass wanted urls as 'urls' param:
+  sc-gmail.html?urls=http://snd.sc/dUX0sF,http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1
 
 == Testing
- To run tests, run 'rake test' and load test/test.html in any browser
+ To run tests, run 'rake test' or load test/js/test.html in any browser
  
 == TODO
  - Make icon work
