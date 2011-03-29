@@ -46,15 +46,16 @@ task :release => :build do
     puts "You must be on the master branch to release!"
     exit!
   end
-  if `git fetch --tags && git tag`.split(/\n/).include?(gem_file)
-    raise "Version #{gem_file} already deployed"
-  end
+  #if `git fetch --tags && git tag`.split(/\n/).include?(gem_file)
+  #  raise "Version #{gem_file} already deployed"
+  #end
+  gem_file = '0.1.0'
   sh <<-END
+    git checkout live
+    mv -f live/* .
     git commit -a --allow-empty -m 'Release #{gem_file}'
     git tag -a #{gem_file} -m 'Version #{gem_file}'
-    git push origin master
+    git push origin live
     git push origin --tags
-    scp pkg/#{gem_file} #{remote_gem_host}:#{remote_gem_path}/gems && \
-    ssh #{remote_gem_host} 'gem generate_index -d #{remote_gem_path}'
   END
 end
