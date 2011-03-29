@@ -2,5 +2,5 @@
 source "http://rubygems.org"
 
 gem "erubis"
-
 gem "juicer"
+gem "firewatir"

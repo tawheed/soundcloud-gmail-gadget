@@ -1,49 +1,54 @@
 require 'rake'
 
-desc "Build the gadget"
-task :build do
-  files = %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js)
+def build_gadget(js_files = nil, css_files = nil)
+  js_files  ||= %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js)
+  css_files ||= %w(src/sc-gmail/styles.css)
 
   sh <<-END
-    rm -rf live
+    juicer -q merge -s -f -o sc-gmail.js #{js_files.join(' ')}
+    echo "@javascripts = File.open('sc-gmail.js').read" >> sc-gmail.rb
+
+    juicer -q merge -s -f -o sc-gmail.css #{css_files.join(' ')}
+    echo "@styles = File.open('sc-gmail.css').read" >> sc-gmail.rb
+
+    erubis -E PrintOut -l ruby src/sc-gmail/gadget.html.erb  >> sc-gmail.rb
+    ruby sc-gmail.rb > sc-gmail.html
+
+    rm -f sc-gmail.css sc-gmail.js sc-gmail.rb
+  END
+end
+
+desc "Build the gadget and the xml files"
+task :build => :clean do
+  build_gadget
+
+  sh <<-END
     mkdir live
-    juicer -q merge -s -f -o sc-gmail.js #{files.join(' ')}
     erubis -E DeleteIndent,PrintOut -l ruby src/application-manifest.xml.erb | ruby > live/application-manifest.xml
-    echo "@styles = File.open('src/sc-gmail/styles.css').read" > gadget.rb
-    echo "@javascripts = File.open('sc-gmail.js').read" >> gadget.rb
-    erubis -E PrintOut -l ruby src/sc-gmail/gadget.html.erb  >> gadget.rb
-    ruby gadget.rb > sc-gmail.html
-    echo "@gadget = File.open('sc-gmail.html').read" > sc-gmail.rb
+
+    echo "@gadget = File.open('sc-gmail.html').read" >> sc-gmail.rb
     erubis -E PrintOut -l ruby src/sc-gmail.xml.erb  >> sc-gmail.rb
     ruby sc-gmail.rb > live/sc-gmail-gadget.xml
-    rm -f sc-gmail.js gadget.rb sc-gmail.rb sc-gmail.html
+
+    rm -f sc-gmail.rb sc-gmail.html
   END
 end
 
 
-desc "Build example"
-task :build_example do
-  files = %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js test/jQuery-URL-Parser/jquery.url.js test/test-helper.js)
-  sh <<-END
-    rm -f example.html
-    juicer -q merge -s -f -o sc-gmail.js #{files.join(' ')}
-    echo "@styles = File.open('src/sc-gmail/styles.css').read" > gadget.rb
-    echo "@javascripts = File.open('sc-gmail.js').read" >> gadget.rb
-    erubis -E PrintOut -l ruby src/sc-gmail/gadget.html.erb  >> gadget.rb
-    ruby gadget.rb > example.html
-    rm -f sc-gmail.js gadget.rb
-  END
+desc "Build the gadget file"
+task :build_gadget => :clean do
+  js_files = %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js test/jQuery-URL-Parser/jquery.url.js test/test-helper.js)
+  build_gadget js_files
 
   puts <<-END
     \n\nRun with:
-    open example.html?urls=http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1\n
+    open sc-gmail.html?urls=http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1\n
   END
 end
 
 task :clean do
   sh <<-END
-    rm -f example.html
-    rm -rf live
+    rm -rf live sc-gmail.*
   END
 end
 

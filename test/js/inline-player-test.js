@@ -5,7 +5,7 @@ $(document).ready(function(){
 
   //Fixtures
   var validUrls = [
-        'http://soundcloud.com/forss/soulhack',
+        'http://soundcloud.com/forss',
         'http://www.soundcloud.com/forss/soulhack',
         'https://www.soundcloud.com/forss/soulhack',
         'HTTP://SOUNDCLOUD.COM/FORSS/SOULHACK',

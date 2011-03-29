@@ -1,3 +1,6 @@
+html, body {
+  overflow:hidden;
+}
 body {
   background: transparent;
   font-size: 13px;
