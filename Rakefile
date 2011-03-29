@@ -78,9 +78,12 @@ task :release => :build do
     git checkout live
     mv -f live/* .
     git commit -a --allow-empty -m 'Release #{version}'
-    
+
     git push origin live
     git push origin --tags
     git checkout master
   END
+
+  Rake::Task["clean"].execute
+
 end
