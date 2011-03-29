@@ -57,5 +57,6 @@ task :release => :build do
     git tag -a #{gem_file} -m 'Version #{gem_file}'
     git push origin live
     git push origin --tags
+    git checkout master
   END
 end
