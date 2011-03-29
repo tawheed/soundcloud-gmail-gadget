@@ -1,7 +1,7 @@
 .ftpssh_settings
-.rvmrc
 .DS_Store
 example.html
 live
 application-manifest.xml
 sc-gmail-gadget.xml
+.rvmrc
