@@ -10,6 +10,7 @@
 
 (function( $ ){
   var reservedUsers = [
+    '101',
     'accounts', 'activate', 'admin', 'announcements', 'api', 'apps', 'artworks', 'assets',
     'community-guidelines', 'connect', 'contacts', 'customize', 'creativecommons',
     'dashboard', 'dropbox',
