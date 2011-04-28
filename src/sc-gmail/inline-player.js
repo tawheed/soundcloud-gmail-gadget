@@ -35,7 +35,7 @@
   ],
   reservedTitles = [
     'comments',
-    'favorites', 'following', 'followers',
+    'favorites', 'following', 'follow', 'followers',
     'groups',
     'dropbox',
     'sets',

@@ -5,7 +5,7 @@ $(document).ready(function(){
 
   //Fixtures
   var validUrls = [
-        'http://soundcloud.com/forss',
+        'http://soundcloud.com/forss/soulhack',
         'http://www.soundcloud.com/forss/soulhack',
         'https://www.soundcloud.com/forss/soulhack',
         'HTTP://SOUNDCLOUD.COM/FORSS/SOULHACK',
@@ -34,6 +34,7 @@ $(document).ready(function(){
         'http://soundcloud.com/username/favorites',
         'http://soundcloud.com/username/groups',
         'http://soundcloud.com/username/sets',
+        'http://soundcloud.com/username/follow',
         'http://soundcloud.com/username/tracks',
         'http://soundcloud.com/accounts/trackname',
         'http://soundcloud.com/dashboard/trackname',
@@ -67,7 +68,7 @@ $(document).ready(function(){
     });
   });
 
-  test('filteredUrl: filter path', 34, function() {
+  test('filteredUrl: filter path', 35, function() {
     $.each(validUrls, function(index, url) {
       var cleaned = jQuery('<ul/>').inlinePlayer('filteredUrl', extractPath(url));
       ok( cleaned, 'We expect path not to be filtered: ' + url );
