@@ -82,12 +82,13 @@ $(document).ready(function(){
 
   test('filteredUrl: filter path', 35, function() {
     $.each(validUrls, function(index, url) {
-      var cleaned = jQuery('<ul/>').inlinePlayer('filteredUrl', extractPath(url));
+      var path =
+          cleaned = jQuery('<ul/>').inlinePlayer('filteredUrl', url);
       ok( cleaned, 'We expect path not to be filtered: ' + url );
     });
 
     $.each(blacklistedUrls, function(index, url) {
-      var cleaned = jQuery('<ul/>').inlinePlayer('filteredUrl', extractPath(url));
+      var cleaned = jQuery('<ul/>').inlinePlayer('filteredUrl', url);
       ok( !cleaned, 'We expect path to be filtered: ' + url );
     });
   });
@@ -111,7 +112,7 @@ $(document).ready(function(){
   });
 
   test('matches JSON obj with url', 1, function() {
-    var $node = jQuery('<div/>').inlinePlayer(createMatches({ url : 'http://soundcloud.com/forss/soulhack'}), { callback : function(list) {
+    var $node = jQuery('<div/>').inlinePlayer({ url : 'http://soundcloud.com/forss/soulhack'}, { callback : function(list) {
       var cnt = 0;
       $.each(list, function(url, height) {
         equal( url, 'http://soundcloud.com/forss/soulhack', 'We expect list to have http://soundcloud.com/forss/soulhack');

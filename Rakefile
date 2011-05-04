@@ -37,7 +37,7 @@ end
 
 desc "Build the gadget file"
 task :build_gadget => :clean do
-  js_files = %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js test/jQuery-URL-Parser/jquery.url.js test/test-helper.js)
+  js_files = %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js test/js/test-helper.js)
   build_gadget js_files
 
   puts <<-END

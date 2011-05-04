@@ -56,7 +56,12 @@
     /**
      * Filter blacklist or invalid paths
      */
-    filteredUrl : function(path) {
+    filteredUrl : function(url) {
+      var path = url.split(/^(https?:\/\/)?(www\.)?soundcloud.com(.+)/i)[3]; //strip host
+      if( !path ) { //  it's not a valid URL
+        return false;
+      }
+
       var slices = $.map( methods.splitPath(path), function(element, index) {
             return element.toLowerCase();
           });
@@ -106,15 +111,11 @@
         //add ul element if not present
         $this = $this.is('ul') ? $this : $('<ul />').appendTo($this);
 
-        $.each(matches, function(index, match) {
-          var url = false;
-          match = match.url || match;
-          if( (path = match.split(/^(https?:\/\/)?(www\.)?soundcloud.com(.+)/i)[3]) ) {  //strip host
-            url = methods.filteredUrl(path);
+        $.each(matches, function(index, url) {
+          url = url.url || url;
+          if( url.search('snd.sc') === -1 ) { //whitelist snd.sc URLs
+            url = methods.filteredUrl(url);
           }
-          else if( match.search('snd.sc') !== -1 ) {
-            url = match;
-          } // else: it's not a valid URL
 
           if( url && !list[url] ) {
             list[url] = (url.search(/\/sets\//i) !== -1) ? options.setsHeight : options.singleHeight;
