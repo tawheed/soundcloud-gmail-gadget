@@ -107,7 +107,15 @@
         $this = $this.is('ul') ? $this : $('<ul />').appendTo($this);
 
         $.each(matches, function(index, match) {
-          var url = (match.host.indexOf('snd.sc') !== -1) ? match.url : methods.filteredUrl(match.path);
+          var url = false;
+          match = match.url || match;
+          if( (path = match.split(/^(https?:\/\/)?(www\.)?soundcloud.com(.+)/i)[3]) ) {  //strip host
+            url = methods.filteredUrl(path);
+          }
+          else if( match.search('snd.sc') !== -1 ) {
+            url = match;
+          } // else: it's not a valid URL
+
           if( url && !list[url] ) {
             list[url] = (url.search(/\/sets\//i) !== -1) ? options.setsHeight : options.singleHeight;
             $('<li />').append(methods.playerCode(url, list[url])).appendTo($this);

@@ -48,7 +48,19 @@ $(document).ready(function(){
         'http://soundcloud.com/pages/trackname',
         'http://soundcloud.com/robots/trackname',
         'http://soundcloud.com/search/trackname'
-        ];
+      ],
+      invalidUrls = [
+        'http://soundcloud.com/forss/soulhack/fake',
+        'http://soundcloud.com/ryan-15-5/random-audio-test/for/9fcf39?utm_campaign=bulk',
+        'http://soundcloud.com/?utm_campaign=direct&utm_content=welcome_email',
+        'http://support.soundcloud.com/',
+        'http://soundcloud.com/username/dropbox',
+        'http://support.soundcloud.com/user/track',
+        'http://soundcloud.com/help',
+        'http://soundcloud.com/101',
+        'http://soundcloud.com/tour',
+        'http://soundcloud.com/premium'
+      ];
 
   module('jQuery.inlinePlayer');
   test('splitPath: split path', 7, function() {
@@ -81,20 +93,30 @@ $(document).ready(function(){
   });
 
   test('inital dom node', 7, function() {
-    var $node = jQuery('<div/>').inlinePlayer(createMatches(validUrls.concat(validExternalUrls)), { callback : function(list) {
+    var $node = jQuery('<div/>').inlinePlayer(validUrls.concat(validExternalUrls).concat(invalidUrls), { callback : function(list) {
       var cnt = 0, maxHeight = 0;
       $.each(list, function(url, height) {
+        console.log(url);
         cnt += 1;
         maxHeight += height;
       });
-      equal( 12, cnt, 'We expect list to have ' + cnt + ' elements');
-      equal( 1210, maxHeight, 'We expect list to have ' + maxHeight + ' height');
+      equal( cnt, 12, 'We expect list to have 12 elements');
+      equal( maxHeight, 1210, 'We expect list to have 1210 height');
     }});
     equal( $node.find('ul').length, 1, 'We expect UL to be added' );
     equal( $node.find('ul li').length, 12, 'We expect li to be added to ul' );
     equal( $node.find('ul li:first-child object').length, 1, 'We expect object to be added to li' );
     equal( $node.find('ul li:first-child object param').length, 2, 'We expect param to be added to object' );
     equal( $node.find('ul li:first-child object embed').length, 1, 'We expect embed to be added to object' );
+  });
+
+  test('matches JSON obj with url', 1, function() {
+    var $node = jQuery('<div/>').inlinePlayer(createMatches({ url : 'http://soundcloud.com/forss/soulhack'}), { callback : function(list) {
+      var cnt = 0;
+      $.each(list, function(url, height) {
+        equal( url, 'http://soundcloud.com/forss/soulhack', 'We expect list to have http://soundcloud.com/forss/soulhack');
+      });
+    }});
   });
 
 });
