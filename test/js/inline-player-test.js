@@ -59,7 +59,8 @@ $(document).ready(function(){
         'http://soundcloud.com/help',
         'http://soundcloud.com/101',
         'http://soundcloud.com/tour',
-        'http://soundcloud.com/premium'
+        'http://soundcloud.com/premium',
+        'http://google.com/user/track'
       ];
 
   module('jQuery.inlinePlayer');
