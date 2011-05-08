@@ -1,0 +1,24 @@
+.sc-gadget {
+  padding: 0 10px;
+  background: #F2F2F2;
+}
+.sc-gadget .head {
+  font-size: 80%;
+  padding-top: 8px;
+  margin-bottom: 4px;
+}
+.sc-gadget ul {
+  padding: 0;
+  margin: 0;
+}
+.sc-gadget li {
+  list-style-type: none;
+  padding: 0 0 10px 0;
+  margin: 0;
+  display: none;
+}
+.sc-gadget a {
+  font-size: 80%;
+  color: #55688A;
+  display: none;
+}

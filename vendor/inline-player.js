@@ -1,5 +1,5 @@
 /**
- * jQuery SoundCloud GMail plugin v0.0.1
+ * jQuery SoundCloud Inline Player Plugin v0.0.2
  * [https://github.com/soundcloud/SoundCloud-Gmail](https://github.com/soundcloud/SoundCloud-Gmail)
  *
  * Copyright 2011, SoundCloud Ltd.
@@ -82,12 +82,13 @@
     /**
      * Returns SoundCloud player
      */
-    playerCode : function(url, height) {
+    playerCode : function(url, height, https) {
       url = encodeURIComponent(url);
+      url = (https ? 'https' : 'http') + '://player.soundcloud.com/player.swf?url=' + url;
       return '<object height="' + height + '" width="100%"> \
-         <param name="movie" value="http://player.soundcloud.com/player.swf?url=' + url + '" /> \
+         <param name="movie" value="' + url + '" /> \
          <param name="allowscriptaccess" value="always" /> \
-         <embed allowscriptaccess="always" height="' + height + '" src="http://player.soundcloud.com/player.swf?url=' + url + '" type="application/x-shockwave-flash" width="100%" /> \
+         <embed allowscriptaccess="always" height="' + height + '" src="' + url + '" type="application/x-shockwave-flash" width="100%" /> \
        </object>';
     },
 
@@ -96,6 +97,7 @@
      */
     init : function( matches, options ) {
       options = $.extend(true, {
+        https: false,
         singleHeight: 81,
         setsHeight: 200
       }, options);
@@ -119,7 +121,7 @@
 
           if( url && !list[url] ) {
             list[url] = (url.search(/\/sets\//i) !== -1) ? options.setsHeight : options.singleHeight;
-            $('<li />').append(methods.playerCode(url, list[url])).appendTo($this);
+            $('<li />').append(methods.playerCode(url, list[url], options.https)).appendTo($this);
           }
         });
 
