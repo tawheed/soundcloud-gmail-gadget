@@ -1,21 +1,23 @@
 require 'rake'
 
-namespace :google_app do
+namespace 'google-app' do
+  JS_FILES = %w(vendor/jquery-1.5.2.js vendor/inline-player.js vendor/inline-player.js google-app/gadget.js)
+
   def build_gadget(js_files = nil, css_files = nil)
-    js_files  ||= %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js)
-    css_files ||= %w(src/sc-gmail/styles.css)
+    js_files  ||= JS_FILES
+    css_files ||= %w(google-app/styles.css)
 
     sh <<-END
-      juicer -q merge -s -f -o sc-gmail.js #{js_files.join(' ')}
-      echo "@javascripts = File.open('sc-gmail.js').read" >> sc-gmail.rb
+      juicer -q merge -s -f -o javascripts.js #{js_files.join(' ')}
+      echo "@javascripts = File.open('javascripts.js').read" >> gadget.rb
 
-      juicer -q merge -s -f -o sc-gmail.css #{css_files.join(' ')}
-      echo "@styles = File.open('sc-gmail.css').read" >> sc-gmail.rb
+      juicer -q merge -s -f -o styles.css #{css_files.join(' ')}
+      echo "@styles = File.open('styles.css').read" >> gadget.rb
 
-      erubis -E PrintOut -l ruby src/sc-gmail/gadget.html.erb  >> sc-gmail.rb
-      ruby sc-gmail.rb > sc-gmail.html
+      erubis -E PrintOut -l ruby google-app/gadget.html.erb  >> gadget.rb
+      ruby gadget.rb > gadget.html
 
-      rm -f sc-gmail.css sc-gmail.js sc-gmail.rb
+      rm -f javascripts.js styles.css gadget.rb
     END
   end
 
@@ -24,73 +26,31 @@ namespace :google_app do
     build_gadget
 
     sh <<-END
-      mkdir live
-      erubis -E DeleteIndent,PrintOut -l ruby src/application-manifest.xml.erb | ruby > live/application-manifest.xml
+      mkdir build/google-app
+      erubis -E DeleteIndent,PrintOut -l ruby google-app/application-manifest.xml.erb | ruby > build/google-app/application-manifest.xml
 
-      echo "@gadget = File.open('sc-gmail.html').read" >> sc-gmail.rb
-      erubis -E PrintOut -l ruby src/sc-gmail.xml.erb  >> sc-gmail.rb
-      ruby sc-gmail.rb > live/sc-gmail-gadget.xml
+      echo "@gadget = File.open('gadget.html').read" >> gadget.rb
+      erubis -E PrintOut -l ruby google-app/gadget.xml.erb >> gadget.rb
+      ruby gadget.rb > build/google-app/gadget.xml
 
-      rm -f sc-gmail.rb sc-gmail.html
+      rm -f gadget.rb gadget.html
     END
   end
 
 
   desc "Build the gadget file"
   task :build_gadget => :clean do
-    js_files = %w(src/sc-gmail/inline-player.js src/sc-gmail/behavior.js test/js/test-helper.js)
-    build_gadget js_files
+    build_gadget(JS_FILES << 'google-app/test-wrapper.js')
 
     puts <<-END
       \n\nRun with:
-      open sc-gmail.html?urls=http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1\n
+      open gadget.html?urls=http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1\n
     END
-  end
-
-  task :clean do
-    sh <<-END
-      rm -rf live sc-gmail.*
-    END
-  end
-
-  require 'rake/testtask'
-  Rake::TestTask.new(:test) do |t|
-    t.libs << 'lib' << 'test' << Rake.original_dir
-    t.pattern = 'test/**/*_test.rb'
-    t.verbose = false
-  end
-
-  task :default => :test
-
-  desc "Deploys gadget to live branch"
-  task :release => :build do
-    unless `git branch` =~ /^\* master$/
-      puts "You must be on the master branch to release!"
-      exit!
-    end
-    version = File.open('VERSION').read
-
-    if `git fetch --tags && git tag`.split(/\n/).include?(version)
-      raise "Version #{version} already deployed"
-    end
-
-    sh <<-END
-      git checkout --track -b live origin/live
-      git checkout live
-      mv -f live/* .
-      git commit -a --allow-empty -m 'Release #{version}'
-
-      git push origin live
-      git push origin --tags
-      git checkout master
-    END
-
-    Rake::Task["clean"].execute
   end
 end
 
 
-namespace :chrome do
+namespace 'chrome' do
   desc "Build the gadget and the xml files"
   task :build do
     sh <<-END
@@ -100,7 +60,7 @@ namespace :chrome do
 end
 
 
-namespace :firefox do
+namespace 'firefox' do
   desc "Build the gadget and the xml files"
   task :build do
     sh <<-END
@@ -108,3 +68,48 @@ namespace :firefox do
     END
   end
 end
+
+
+desc "Build all"
+task :build_all do
+  Rake::Task["google-app:build"].execute
+  Rake::Task["chrome:build"].execute
+  Rake::Task["firefox:build"].execute
+end
+
+
+
+
+task :clean do
+  sh <<-END
+    rm -rf live gadget.*
+  END
+end
+
+desc "Deploys gadget to live branch"
+task :release => :build do
+  unless `git branch` =~ /^\* master$/
+    puts "You must be on the master branch to release!"
+    exit!
+  end
+  version = File.open('VERSION').read
+
+  if `git fetch --tags && git tag`.split(/\n/).include?(version)
+    raise "Version #{version} already deployed"
+  end
+
+  sh <<-END
+    git checkout --track -b live origin/live
+    git checkout live
+    mv -f live/* .
+    git commit -a --allow-empty -m 'Release #{version}'
+
+    git push origin live
+    git push origin --tags
+    git checkout master
+  END
+
+  Rake::Task["clean"].execute
+end
+
+task :default => :build_all

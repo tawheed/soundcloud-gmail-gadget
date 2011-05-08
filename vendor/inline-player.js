@@ -1,10 +1,9 @@
 /**
- * jQuery SoundCloud Inline Player Plugin v0.0.2
+ * jQuery SoundCloud Inline Player Plugin v0.2.0
  * [https://github.com/soundcloud/SoundCloud-Gmail](https://github.com/soundcloud/SoundCloud-Gmail)
  *
- * Copyright 2011, SoundCloud Ltd.
- * Licensed under the MIT license.
- * [http://opensource.org/licenses/mit-license.php](http://opensource.org/licenses/mit-license.php)
+ * Copyright 2011, SoundCloud Ltd., Tobias Bielohlawek
+ * Licensed under the BSD license.
  *
  */
 
