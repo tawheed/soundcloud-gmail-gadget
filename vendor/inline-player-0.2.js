@@ -1,13 +1,12 @@
-/**
+/*!
  * jQuery SoundCloud Inline Player Plugin v0.2.0
- * [https://github.com/soundcloud/SoundCloud-Gmail](https://github.com/soundcloud/SoundCloud-Gmail)
+ * [https://github.com/soundcloudlabs/soundcloud-gmail-gadget](https://github.com/soundcloudlabs/soundcloud-gmail-gadget)
  *
  * Copyright 2011, SoundCloud Ltd., Tobias Bielohlawek
  * Licensed under the BSD license.
  *
  */
-
-(function( $ ){
+(function($){
   var reservedUsers = [
     '101',
     'accounts', 'activate', 'admin', 'announcements', 'api', 'apps', 'artworks', 'assets',
@@ -148,4 +147,4 @@
     }
   };
 
-})( jQuery );
+})(jQuery);

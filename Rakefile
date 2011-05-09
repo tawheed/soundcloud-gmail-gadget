@@ -1,31 +1,14 @@
 require 'rake'
 
+VENDOR_JS_FILES = %w(vendor/jquery-1.6.js vendor/inline-player-0.2.js)
+
 namespace 'google-app' do
-  JS_FILES = %w(vendor/jquery-1.5.2.js vendor/inline-player.js vendor/inline-player.js google-app/gadget.js)
-
-  def build_gadget(js_files = nil, css_files = nil)
-    js_files  ||= JS_FILES
-    css_files ||= %w(google-app/styles.css)
-
-    sh <<-END
-      juicer -q merge -s -f -o javascripts.js #{js_files.join(' ')}
-      echo "@javascripts = File.open('javascripts.js').read" >> gadget.rb
-
-      juicer -q merge -s -f -o styles.css #{css_files.join(' ')}
-      echo "@styles = File.open('styles.css').read" >> gadget.rb
-
-      erubis -E PrintOut -l ruby google-app/gadget.html.erb  >> gadget.rb
-      ruby gadget.rb > gadget.html
-
-      rm -f javascripts.js styles.css gadget.rb
-    END
-  end
-
   desc "Build the gadget and the xml files"
-  task :build => :clean do
-    build_gadget
+  task :build do
+    build_gadget VENDOR_JS_FILES + %w(google-app/gadget.js)
 
     sh <<-END
+      mkdir build
       mkdir build/google-app
       erubis -E DeleteIndent,PrintOut -l ruby google-app/application-manifest.xml.erb | ruby > build/google-app/application-manifest.xml
 
@@ -36,25 +19,24 @@ namespace 'google-app' do
       rm -f gadget.rb gadget.html
     END
   end
-
-
-  desc "Build the gadget file"
-  task :build_gadget => :clean do
-    build_gadget(JS_FILES << 'google-app/test-wrapper.js')
-
-    puts <<-END
-      \n\nRun with:
-      open gadget.html?urls=http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1\n
-    END
-  end
 end
-
 
 namespace 'chrome' do
   desc "Build the gadget and the xml files"
   task :build do
+    in_path   = "chrome-extension"
+    out_path  = "build/#{in_path}"
+    js_files  = VENDOR_JS_FILES + %W(src/gadget.js #{in_path}/main.js)
+    css_files = %w(src/style.css)
+
     sh <<-END
-      zip -r soundcloud-gmail.zip src/
+      mkdir -p #{out_path}
+      juicer -q merge -s -f -o #{out_path}/javascripts.js #{js_files.join(' ')}
+      juicer -q merge -s -f -o #{out_path}/styles.css #{css_files.join(' ')}
+      cp #{in_path}/manifest.json #{out_path}/
+      cp assets/logo* #{out_path}/
+
+      zip -r build/chrome-extension.zip build/chrome-extension/
     END
   end
 end
@@ -63,26 +45,65 @@ end
 namespace 'firefox' do
   desc "Build the gadget and the xml files"
   task :build do
+    in_path   = "firefox-extension"
+    out_path  = "build/#{in_path}"
+    js_files  = VENDOR_JS_FILES + %W(src/gadget.js #{in_path}/main.js)
+    css_files = %w(src/style.css)
+
     sh <<-END
-      cfx xpi
+      mkdir -p #{out_path}/lib
+      mkdir -p #{out_path}/data
+      juicer -q merge -s -f -o #{out_path}/data/javascripts.js #{js_files.join(' ')}
+      juicer -q merge -s -f -o #{out_path}/data/styles.css #{css_files.join(' ')}
+      cp #{in_path}/main.js #{out_path}/lib
+      cp #{in_path}/package.json #{out_path}/
+      cp assets/logo-48.png #{out_path}/icon.png
+    END
+  end
+
+  task :env => :build do
+    sh <<-END
+      cd /Applications/addon-sdk
+      source bin/activate
+      cd -
+    END
+  end
+
+  task :release => :env do
+    sh 'cd build/firefox-extension && cfx xpi'
+  end
+
+  task :test => :env do
+    sh 'cd build/firefox-extension && cfx test'
+  end
+
+  task :run => :env do
+    sh 'cd build/firefox-extension && cfx run'
+  end
+end
+
+namespace 'example' do
+  desc "Build the Example file"
+  task :build do
+    build_gadget VENDOR_JS_FILES + %w(google-app/example.js google-app/gadget.js)
+
+    puts <<-END
+      \n\nRun with:
+      open gadget.html?urls=http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1\n
     END
   end
 end
 
-
 desc "Build all"
-task :build_all do
+task :build_all => :clean do
   Rake::Task["google-app:build"].execute
   Rake::Task["chrome:build"].execute
   Rake::Task["firefox:build"].execute
 end
 
-
-
-
 task :clean do
   sh <<-END
-    rm -rf live gadget.*
+    rm -rf build live gadget.*
   END
 end
 
@@ -113,3 +134,21 @@ task :release => :build do
 end
 
 task :default => :build_all
+
+
+def build_gadget(js_files = nil, css_files = nil)
+  css_files ||= %w(google-app/styles.css)
+
+  sh <<-END
+    juicer -q merge -s -f -o javascripts.js #{js_files.join(' ')}
+    echo "@javascripts = File.open('javascripts.js').read" >> gadget.rb
+
+    juicer -q merge -s -f -o styles.css #{css_files.join(' ')}
+    echo "@styles = File.open('styles.css').read" >> gadget.rb
+
+    erubis -E PrintOut -l ruby google-app/gadget.html.erb  >> gadget.rb
+    ruby gadget.rb > gadget.html
+
+    rm -f javascripts.js styles.css gadget.rb
+  END
+end

@@ -1,1 +1,1 @@
-gadget(jQuery, chrome.extension.getURL('style.css'));
+gadget(jQuery, chrome.extension.getURL('styles.css'));

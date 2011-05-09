@@ -1,22 +1,18 @@
 # SoundCloud GMail Gadget
 
-Show SoundCloud waveform players for track links in emails. It's available as FireFox Extension, Chrome Extension & Google Apps Gadget.
+Show SoundCloud waveform players for track links in emails. It's available as FireFox Extension, Chrome Extension & Google Apps Gadget. It's based on [jQuery](http://www.jquery.org) and the [jQuery Soundcloud Inline Player Plugin](http://soundcloudlabs.com).
 
 ![SoundCloud GMail Gadget](http://soundcloudlabs.com/images/projects/gmail.png)
 
-It's makes use of the [soundcloud-inline-player jQuery Plugin](http://www.soundcloudlabs.com).
-
-[See on SoundCloudLabs](http://www.soundcloudlabs.com)
+[See more on SoundCloudLabs](http://soundcloudlabs.com)
 
 ## Deploy
-To deploy, run "rake release" which builds application_manifest.xml and sc-gmail-gadget.xml files and pushes those to github live branch.
+To deploy, run `rake build\_all` which builds all thee components into _build/_. For Google App, upload application_manifest.xml to Google Marketplace and deploy gadget.xml. For the browser extensions, get _build/<extension file>_ and upload to the according extension stores.
+
 
 ## Examples
-To see working example, run 'rake build_gadget' and load sc-gmail.html in any browser. Pass wanted urls as 'urls' param:
-  sc-gmail.html?urls=http://snd.sc/dUX0sF,http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1
-
-## Testing
-To run tests, run 'rake test' or load test/js/test.html in any browser.
+To see working example, run `rake example:build` and load gadget.html in any browser. Pass wanted urls as 'urls' param:
+  gadget.html?urls=http://snd.sc/dUX0sF,http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1
 
 ## Gadget Development
 Some use full pages we used for developing the gadget:

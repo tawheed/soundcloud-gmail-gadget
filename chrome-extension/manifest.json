@@ -1,6 +1,6 @@
 {
   "name": "SoundCloud Sounds from Email",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Show SoundCloud waveform players in Google Mail™ for track links in emails",
   "icons": {
     "48" : "logo-48.png",
@@ -8,7 +8,7 @@
   },
   "content_scripts": [ {
     "matches" : [ "https://mail.google.com/mail/u/*/?ui=2&view=bsp*", "https://mail.google.com/mail/?ui=2&view=bsp*" ],
-    "js" : ["jquery-1.5.2.min.js", "inline-player.js", "gadget.js", "main.js"],
+    "js" : ["javascripts.js"],
     "run_at": "document_end",
     "all_frames": true
   } ]

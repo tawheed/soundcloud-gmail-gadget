@@ -1,10 +1,11 @@
-/**
+/*!
  * SoundCloud Gmail Gadget
+ * [https://github.com/soundcloudlabs/soundcloud-gmail-gadget](https://github.com/soundcloudlabs/soundcloud-gmail-gadget)
  *
  * Copyright 2011, SoundCloud Ltd., Tobias Bielohlawek
+ * Licensed under the BSD license.
  *
  */
-
 gadget = function ($, styleUrl) {
   // only act in Conent Frame
   if (!window.frameElement || window.frameElement.id !== 'canvas_frame') {

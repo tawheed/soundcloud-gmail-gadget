@@ -1,7 +1,6 @@
-.ftpssh_settings
 .DS_Store
-example.html
 live
-application-manifest.xml
-sc-gmail-gadget.xml
+build
 .rvmrc
+chrome-extension.zip
+gadget.html
