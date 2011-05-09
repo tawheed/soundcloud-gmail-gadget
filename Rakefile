@@ -21,35 +21,38 @@ namespace 'google-app' do
   end
 end
 
+
 namespace 'chrome' do
+  in_path   = "chrome-extension"
+  out_path  = "build/#{in_path}"
+  js_files  = VENDOR_JS_FILES + %W(src/gadget.js #{in_path}/main.js)
+  css_files = %w(src/style.css)
+
   desc "Build the gadget and the xml files"
   task :build do
-    in_path   = "chrome-extension"
-    out_path  = "build/#{in_path}"
-    js_files  = VENDOR_JS_FILES + %W(src/gadget.js #{in_path}/main.js)
-    css_files = %w(src/style.css)
-
     sh <<-END
       mkdir -p #{out_path}
       juicer -q merge -s -f -o #{out_path}/javascripts.js #{js_files.join(' ')}
       juicer -q merge -s -f -o #{out_path}/styles.css #{css_files.join(' ')}
       cp #{in_path}/manifest.json #{out_path}/
       cp assets/logo* #{out_path}/
-
-      zip -r build/chrome-extension.zip build/chrome-extension/
     END
+  end
+
+  task :release do
+    sh "zip -r build/chrome-extension.zip #{out_path}/"
   end
 end
 
 
 namespace 'firefox' do
+  in_path   = "firefox-extension"
+  out_path  = "build/#{in_path}"
+  js_files  = VENDOR_JS_FILES + %W(src/gadget.js #{in_path}/main.js)
+  css_files = %w(src/style.css)
+
   desc "Build the gadget and the xml files"
   task :build do
-    in_path   = "firefox-extension"
-    out_path  = "build/#{in_path}"
-    js_files  = VENDOR_JS_FILES + %W(src/gadget.js #{in_path}/main.js)
-    css_files = %w(src/style.css)
-
     sh <<-END
       mkdir -p #{out_path}/lib
       mkdir -p #{out_path}/data
@@ -70,15 +73,18 @@ namespace 'firefox' do
   end
 
   task :release => :env do
-    sh 'cd build/firefox-extension && cfx xpi'
+    sh <<-END
+      cfx --pkgdir=#{out_path} xpi
+      mv soundcloud-gmail-firefox-extension.xpi build/firefox-extension.xpi
+    END
   end
 
   task :test => :env do
-    sh 'cd build/firefox-extension && cfx test'
+    sh "cfx --pkgdir=#{out_path} test"
   end
 
   task :run => :env do
-    sh 'cd build/firefox-extension && cfx run'
+    sh "cfx --pkgdir=#{out_path} run"
   end
 end
 
@@ -94,6 +100,12 @@ namespace 'example' do
   end
 end
 
+task :clean do
+  sh <<-END
+    rm -rf build live gadget.*
+  END
+end
+
 desc "Build all"
 task :build_all => :clean do
   Rake::Task["google-app:build"].execute
@@ -101,16 +113,17 @@ task :build_all => :clean do
   Rake::Task["firefox:build"].execute
 end
 
-task :clean do
-  sh <<-END
-    rm -rf build live gadget.*
-  END
+desc "Release all"
+task :release_all => :build_all do
+  #Rake::Task["google-app:release"].execute - NOTHING to do
+  Rake::Task["chrome:release"].execute
+  Rake::Task["firefox:release"].execute
 end
 
 desc "Deploys gadget to live branch"
-task :release => :build do
+task :deploy => :release_all do
   unless `git branch` =~ /^\* master$/
-    puts "You must be on the master branch to release!"
+    puts "You must be on the master branch to deploy!"
     exit!
   end
   version = File.open('VERSION').read
@@ -120,21 +133,18 @@ task :release => :build do
   end
 
   sh <<-END
-    git checkout --track -b live origin/live
-    git checkout live
-    mv -f live/* .
+    git checkout --track -b gh-pages origin/gh-pages
+    git checkout gh-pages
+    mv -f build/* .
     git commit -a --allow-empty -m 'Release #{version}'
 
-    git push origin live
+    git push origin gh-pages
     git push origin --tags
     git checkout master
   END
-
-  Rake::Task["clean"].execute
 end
 
 task :default => :build_all
-
 
 def build_gadget(js_files = nil, css_files = nil)
   css_files ||= %w(google-app/styles.css)

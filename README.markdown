@@ -1,18 +1,21 @@
-# SoundCloud GMail Gadget
+# SoundCloud Google Mail™ Gadget
 
-Show SoundCloud waveform players for track links in emails. It's available as FireFox Extension, Chrome Extension & Google Apps Gadget. It's based on [jQuery](http://www.jquery.org) and the [jQuery Soundcloud Inline Player Plugin](http://soundcloudlabs.com).
+Show SoundCloud waveform players for track links in Google Mail™ emails. It's available as Firefox and Chrome Extension or as Google Apps Gadget.
+It's based on [jQuery](http://www.jquery.org) and [jQuery Soundcloud Inline Player Plugin](http://soundcloudlabs.com).
 
 ![SoundCloud GMail Gadget](http://soundcloudlabs.com/images/projects/gmail.png)
 
 [See more on SoundCloudLabs](http://soundcloudlabs.com)
 
+
 ## Deploy
-To deploy, run `rake build\_all` which builds all thee components into _build/_. For Google App, upload application_manifest.xml to Google Marketplace and deploy gadget.xml. For the browser extensions, get _build/<extension file>_ and upload to the according extension stores.
+To deploy, run `rake build_all` which builds all thee components into _build/_. For Google App, upload `application_manifest.xml` to [Google Market Place](https://www.google.com/enterprise/marketplace/viewVendorProfile) and deploy `gadget.xml`. For the browser extensions, get _build/<extension file>_ and upload to the according extension stores.
 
 
 ## Examples
-To see working example, run `rake example:build` and load gadget.html in any browser. Pass wanted urls as 'urls' param:
-  gadget.html?urls=http://snd.sc/dUX0sF,http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1
+For a working example, run `rake example:build` and load `gadget.html` in any browser. Pass wanted urls as _urls_ parameter:
+> gadget.html?urls=http://snd.sc/dUX0sF,http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1
+
 
 ## Gadget Development
 Some use full pages we used for developing the gadget:
@@ -32,8 +35,10 @@ Some use full pages we used for developing the gadget:
 - [Publish at Google Market Place](http://code.google.com/chrome/extensions/packaging.html)
 - [Chrome Developer Dashboard](https://chrome.google.com/webstore/developer/dashboard)
 
+
 ## Todos
   none :-)
+
 
 ## Contributing
 
@@ -45,15 +50,8 @@ We'll check out your contribution if you:
 
 We'll do our best to help you out with any contribution issues you may have.
 
+
 ## License
 
 The license is included as LICENSE in this directory.
 
-
-
-Fully QUnit tested.
-
-with minimal dependencies on the gadget Framework itself and therefor
-It extracts any valid SoundCloud URL from the mail body.
-
-A GMail Gadget to display the SoundCloud Player inline within GMail.
