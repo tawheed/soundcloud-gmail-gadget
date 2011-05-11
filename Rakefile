@@ -41,6 +41,7 @@ namespace 'chrome' do
       erubis -E PrintOut -l ruby #{in_path}/manifest.json.erb >> gadget.rb
       ruby gadget.rb > #{out_path}/manifest.json
       cp assets/logo* #{out_path}/
+      rm -f gadget.rb
     END
   end
 
@@ -68,6 +69,7 @@ namespace 'firefox' do
       ruby gadget.rb > #{out_path}/package.json
       cp #{in_path}/main.js #{out_path}/lib
       cp assets/logo-48.png #{out_path}/icon.png
+      rm -f gadget.rb
     END
   end
 
@@ -133,6 +135,8 @@ task :deploy => :release_all do
   sh <<-END
     git checkout --track -b gh-pages origin/gh-pages
     git checkout gh-pages
+    rm -rf *extension*
+    rm -rf google-app
     mv -f build/* .
     git commit -a --allow-empty -m 'Release #{VERSION}'
 
