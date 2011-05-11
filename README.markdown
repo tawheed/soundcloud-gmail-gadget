@@ -1,7 +1,7 @@
 # SoundCloud Google Mail™ Gadget
 
 Show SoundCloud waveform players for track links in Google Mail™ emails. It's available as Firefox and Chrome Extension or as Google Apps Gadget.
-It's based on [jQuery](http://www.jquery.org) and [jQuery Soundcloud Inline Player Plugin](http://soundcloudlabs.com).
+It's based on [jQuery](http://www.jquery.org) and [jQuery Soundcloud Inline Player Plugin](https://github.com/soundcloudlabs/soundcloud-gmail-gadget/raw/master/vendor/inline-player-0.2.js).
 
 ![SoundCloud GMail Gadget](http://soundcloudlabs.com/images/projects/gmail.png)
 
@@ -13,12 +13,13 @@ To deploy, run `rake build_all` which builds all thee components into _build/_. 
 
 
 ## Examples
-For a working example, run `rake example:build` and load `gadget.html` in any browser. Pass wanted urls as _urls_ parameter:
+For a working example, run `rake example:build` and load `gadget.html` in any browser. Pass SoundCloud urls as _urls_ parameter:
+
 > gadget.html?urls=http://snd.sc/dUX0sF,http://soundcloud.com/max-quintenzirkus/max-quintenzirkus-bounce-1
 
 
 ## Gadget Development
-Some use full pages we used for developing the gadget:
+Some useful pages for developing the gadget:
 
 ### Google App
 - [Developers Guide](http://code.google.com/apis/gmail/gadgets/contextual)
