@@ -125,7 +125,7 @@ task :release_all => :build_all do
 end
 
 desc "Deploys gadget to live branch"
-task :deploy => :release_all do
+task :deploy => :build_all do
   unless `git branch` =~ /^\* master$/
     puts "You must be on the master branch to deploy!"
     exit!
