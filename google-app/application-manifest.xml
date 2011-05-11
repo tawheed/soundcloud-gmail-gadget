@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009">
+
+<Support>
+<Link rel="support" href="http://support.soundcloud.com" />
+<Link rel="deletion-policy" href="http://support.soundcloud.com" />
+</Support>
+
+<Name></Name>
+<Description></Description>
+
+<Extension id="navLink" type="link">
+<Name>SoundCloud</Name>
+<Url>http://soundcloud.com</Url>
+</Extension>
+
+<Extension id="linkExtractor" type="contextExtractor">
+<Name>Link Extractor</Name>
+<Url>google.com:HttpLinkExtractor</Url>
+<Param name="url" value="^(https?:\/\/)?(snd.sc\/[^\/]+|(www.)?soundcloud.com\/[^\/]+\/(sets\/[^\/]+|[^d][^\/]*|d([^r][^\/]*|r([^o][^\/]*|o([^p][^\/]*|p([^b][^\/]*|b([^o][^\/]*|o([^x][^\/]*|x[^\/]+)?)?)?)?)?)?)(\/s-[^\/]+)?)(\/)?((\?|#).*)?$"/>
+<Triggers ref="SoundCloudGadget"/>
+<Scope ref="emailSubject"/>
+<Scope ref="emailBody"/>
+<Container name="mail"/>
+</Extension>
+
+<Extension id="SoundCloudGadget" type="gadget">
+<Name>SoundCloud Gmail contextual gadget</Name>
+<Url>https://github.com/soundcloudlabs/soundcloud-gmail-gadget/raw/build/google-app/gadget.xml</Url>
+<Container name="mail"/>
+</Extension>
+
+<Scope id="emailSubject">
+<Url>tag:google.com,2010:auth/contextual/extractor/SUBJECT</Url>
+<Reason>This application searches the subject of each email for SoundCloud links</Reason>
+</Scope>
+
+<Scope id="emailBody">
+<Url>tag:google.com,2010:auth/contextual/extractor/BODY</Url>
+<Reason>This application searches the message body of each email for SoundCloud links</Reason>
+</Scope>
+
+</ApplicationManifest>
