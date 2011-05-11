@@ -3,7 +3,7 @@ require 'rake'
 VENDOR_JS_FILES = %w(vendor/jquery-1.6.js vendor/inline-player-0.2.js)
 TITLE           = "SoundCloud Sounds in Google Mail\\u2122"
 VERSION         = File.open('VERSION').read.strip
-DESCRIPTION     = "Show SoundCloud waveform players in Google Mail\\u2122 for track links found in emails"
+DESCRIPTION     = "Show SoundCloud waveform players in Google Mail\\u2122 for track links in emails"
 
 namespace 'google-app' do
   desc "Build the gadget and the xml files"
@@ -13,8 +13,11 @@ namespace 'google-app' do
     sh <<-END
       mkdir build
       mkdir build/google-app
-      erubis -E DeleteIndent,PrintOut -l ruby google-app/application-manifest.xml.erb | ruby > build/google-app/application-manifest.xml
+      echo "@title = '#{TITLE}';@version = '#{VERSION}';@description = '#{DESCRIPTION}'" > gadget.rb
+      erubis -E DeleteIndent,PrintOut -l ruby google-app/application-manifest.xml.erb >> gadget.rb
+      ruby gadget.rb > build/google-app/application-manifest.xml
 
+      echo "@title = '#{TITLE}';@version = '#{VERSION}';@description = '#{DESCRIPTION}'" > gadget.rb
       echo "@gadget = File.open('gadget.html').read" >> gadget.rb
       erubis -E PrintOut -l ruby google-app/gadget.xml.erb >> gadget.rb
       ruby gadget.rb > build/google-app/gadget.xml
