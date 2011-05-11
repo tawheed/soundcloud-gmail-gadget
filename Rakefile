@@ -1,6 +1,9 @@
 require 'rake'
 
 VENDOR_JS_FILES = %w(vendor/jquery-1.6.js vendor/inline-player-0.2.js)
+TITLE           = "SoundCloud Sounds in Google Mail\\u2122"
+VERSION         = File.open('VERSION').read.strip
+DESCRIPTION     = "Show SoundCloud waveform players in Google Mail\\u2122 for track links found in emails"
 
 namespace 'google-app' do
   desc "Build the gadget and the xml files"
@@ -34,7 +37,9 @@ namespace 'chrome' do
       mkdir -p #{out_path}
       juicer -q merge -s -f -o #{out_path}/javascripts.js #{js_files.join(' ')}
       juicer -q merge -s -f -o #{out_path}/styles.css #{css_files.join(' ')}
-      cp #{in_path}/manifest.json #{out_path}/
+      echo "@title = '#{TITLE}';@version = '#{VERSION}';@description = '#{DESCRIPTION}'" > gadget.rb
+      erubis -E PrintOut -l ruby #{in_path}/manifest.json.erb >> gadget.rb
+      ruby gadget.rb > #{out_path}/manifest.json
       cp assets/logo* #{out_path}/
     END
   end
@@ -58,8 +63,10 @@ namespace 'firefox' do
       mkdir -p #{out_path}/data
       juicer -q merge -s -f -o #{out_path}/data/javascripts.js #{js_files.join(' ')}
       juicer -q merge -s -f -o #{out_path}/data/styles.css #{css_files.join(' ')}
+      echo "@title = '#{TITLE}';@version = '#{VERSION}';@description = '#{DESCRIPTION}'" > gadget.rb
+      erubis -E PrintOut -l ruby #{in_path}/package.json.erb >> gadget.rb
+      ruby gadget.rb > #{out_path}/package.json
       cp #{in_path}/main.js #{out_path}/lib
-      cp #{in_path}/package.json #{out_path}/
       cp assets/logo-48.png #{out_path}/icon.png
     END
   end
@@ -126,17 +133,16 @@ task :deploy => :release_all do
     puts "You must be on the master branch to deploy!"
     exit!
   end
-  version = File.open('VERSION').read
 
-  if `git fetch --tags && git tag`.split(/\n/).include?(version)
-    raise "Version #{version} already deployed"
+  if `git fetch --tags && git tag`.split(/\n/).include?(VERSION)
+    raise "Version #{VERSION} already deployed"
   end
 
   sh <<-END
     git checkout --track -b gh-pages origin/gh-pages
     git checkout gh-pages
     mv -f build/* .
-    git commit -a --allow-empty -m 'Release #{version}'
+    git commit -a --allow-empty -m 'Release #{VERSION}'
 
     git push origin gh-pages
     git push origin --tags

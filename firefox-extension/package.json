@@ -1,9 +1,0 @@
-{
-    "name": "soundcloud-gmail-firefox-extension",
-    "fullName": "SoundCloud Sounds in Email",
-    "license": "BSD",
-    "author": "Tobias Bielohlawek <tobi@soundcloud.com>",
-    "version": "0.2.0",
-    "id": "jid1-GBYr3F9iI4n8IA",
-    "description": "Show SoundCloud waveform players in Google Mail\u2122 for track links in emails"
-}
