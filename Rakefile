@@ -133,14 +133,15 @@ task :deploy => :release_all do
   end
 
   sh <<-END
-    git checkout --track -b gh-pages origin/gh-pages
-    git checkout gh-pages
+    cp LICENSE VERSION CHANGES.md build/
+    git checkout --track -b build origin/build
+    git checkout build
     rm -rf *extension*
     rm -rf google-app
     mv -f build/* .
     git commit -a --allow-empty -m 'Release #{VERSION}'
 
-    git push origin gh-pages
+    git push origin build
     git push origin --tags
     git checkout master
   END
