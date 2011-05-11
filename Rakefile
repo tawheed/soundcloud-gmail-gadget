@@ -71,27 +71,19 @@ namespace 'firefox' do
     END
   end
 
-  task :env => :build do
+  task :release do
+    cfx "--pkgdir=#{out_path} xpi"
     sh <<-END
-      cd /Applications/addon-sdk
-      source bin/activate
-      cd -
-    END
-  end
-
-  task :release => :env do
-    sh <<-END
-      cfx --pkgdir=#{out_path} xpi
       mv soundcloud-gmail-firefox-extension.xpi build/firefox-extension.xpi
     END
   end
 
-  task :test => :env do
-    sh "cfx --pkgdir=#{out_path} test"
+  task :test do
+    cfx "--pkgdir=#{out_path} test"
   end
 
-  task :run => :env do
-    sh "cfx --pkgdir=#{out_path} run"
+  task :run do
+    cfx "--pkgdir=#{out_path} run"
   end
 end
 
@@ -166,5 +158,14 @@ def build_gadget(js_files = nil, css_files = nil)
     ruby gadget.rb > gadget.html
 
     rm -f javascripts.js styles.css gadget.rb
+  END
+end
+
+def cfx(command)
+  sh <<-END
+    cd /Applications/addon-sdk
+    source bin/activate
+    cd -
+    cfx #{command}
   END
 end
