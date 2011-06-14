@@ -1,5 +1,5 @@
 /*!
- * jQuery SoundCloud Inline Player Plugin v0.2.0
+ * jQuery SoundCloud Inline Player Plugin v0.2
  * [https://github.com/soundcloudlabs/soundcloud-gmail-gadget](https://github.com/soundcloudlabs/soundcloud-gmail-gadget)
  *
  * Copyright 2011, SoundCloud Ltd., Tobias Bielohlawek

@@ -1,6 +1,6 @@
 require 'rake'
 
-VENDOR_JS_FILES = %w(vendor/jquery-1.6.js vendor/inline-player-0.2.js)
+VENDOR_JS_FILES = %w(vendor/jquery-1.6.1.js vendor/inline-player-0.2.js)
 TITLE           = "SoundCloud Sounds in Google Mail\\u2122"
 VERSION         = File.open('VERSION').read.strip
 DESCRIPTION     = "Show SoundCloud waveform players in Google Mail\\u2122 for track links in emails"
@@ -57,7 +57,7 @@ end
 namespace 'firefox' do
   in_path   = "firefox-extension"
   out_path  = "build/#{in_path}"
-  js_files  = VENDOR_JS_FILES + %W(src/gadget.js #{in_path}/main.js)
+  js_files  = %W(src/gadget.js)
   css_files = %w(src/style.css)
 
   desc "Build the gadget and the xml files"
@@ -65,8 +65,8 @@ namespace 'firefox' do
     sh <<-END
       mkdir -p #{out_path}/lib
       mkdir -p #{out_path}/data
-      juicer -q merge -s -f -o #{out_path}/data/javascripts.js #{js_files.join(' ')}
-      juicer -q merge -s -f -o #{out_path}/data/styles.css #{css_files.join(' ')}
+      #{merge(js_files, "#{out_path}/data/javascripts.js")}
+      #{merge(css_files, "#{out_path}/data/styles.css")}
       echo "@title = '#{TITLE}';@version = '#{VERSION}';@description = '#{DESCRIPTION}'" > gadget.rb
       erubis -E PrintOut -l ruby #{in_path}/package.json.erb >> gadget.rb
       ruby gadget.rb > #{out_path}/package.json
@@ -74,6 +74,9 @@ namespace 'firefox' do
       cp assets/logo-48.png #{out_path}/icon.png
       rm -f gadget.rb
     END
+    VENDOR_JS_FILES.each do |file|
+      sh "cp #{file} #{out_path}/data/"
+    end
   end
 
   task :release do
@@ -176,4 +179,12 @@ def cfx(command)
     cd -
     cfx #{command}
   END
+end
+
+def merge(in_files, out_file, minify = false)
+  if minify
+    "juicer -q merge -s -f -o #{out_file} #{Array(in_files).join(' ')}"
+  else
+    "cat #{Array(in_files).join(' ')} > #{out_file}"
+  end
 end
