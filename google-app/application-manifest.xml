@@ -6,8 +6,8 @@
 <Link rel="deletion-policy" href="http://support.soundcloud.com" />
 </Support>
 
-<Name></Name>
-<Description></Description>
+<Name>SoundCloud Sounds in Google Mail\u2122</Name>
+<Description>Show SoundCloud waveform players in Google Mail\u2122 for track links in emails</Description>
 
 <Extension id="navLink" type="link">
 <Name>SoundCloud</Name>
@@ -25,7 +25,7 @@
 </Extension>
 
 <Extension id="SoundCloudGadget" type="gadget">
-<Name>SoundCloud Gmail contextual gadget</Name>
+<Name>SoundCloud Sounds in Google Mail\u2122</Name>
 <Url>https://github.com/soundcloudlabs/soundcloud-gmail-gadget/raw/build/google-app/gadget.xml</Url>
 <Container name="mail"/>
 </Extension>

@@ -3,7 +3,7 @@
     "fullName": "SoundCloud Sounds in Google Mail\u2122",
     "license": "BSD",
     "author": "Tobias Bielohlawek <tobi@soundcloud.com>",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "id": "jid1-GBYr3F9iI4n8IA",
-    "description": "Show SoundCloud waveform players in Google Mail\u2122 for track links found in emails"
+    "description": "Show SoundCloud waveform players in Google Mail\u2122 for track links in emails"
 }

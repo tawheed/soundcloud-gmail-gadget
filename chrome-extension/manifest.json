@@ -1,7 +1,7 @@
 {
   "name": "SoundCloud Sounds in Google Mail\u2122",
-  "version": "0.2.2",
-  "description": "Show SoundCloud waveform players in Google Mail\u2122 for track links found in emails",
+  "version": "0.2.3",
+  "description": "Show SoundCloud waveform players in Google Mail\u2122 for track links in emails",
   "icons": {
     "48" : "logo-48.png",
     "128" : "logo-128.png"
